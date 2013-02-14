@@ -17,7 +17,7 @@
   OCR2A = 100;   //pin 11 -> BIN2  (right motor)
   OCR2B = 100;  //pin 3   -> BIN1  (right motor)
   
-  16 Mhz/ 64 (prescaler)/256 = 976.75 Hz PWM currently 
+  16 Mhz/ 64 (prescaler)/256 = 976.56 Hz PWM currently 
  */
  
 void setup()  { 
@@ -38,15 +38,28 @@ void loop()  {
   
   TCCR0A = _BV(COM0A1) | _BV(COM0B1) | _BV(WGM01) | _BV(WGM00);
   TCCR0B = _BV(CS00) | _BV(CS01);
+//  TCCR0B = _BV(CS02);
   OCR0A = 0;  //pin 6
   OCR0B = 0;  //pin 5
 
-  //testing driver logic
-//    motorDirDist(int dir, int dist, int modulation);
-    motorDirDist(-180, 5000, 100);
+//  testing driver logic
+//  motorDirDist(int dir, int dist, int modulation);
+
+    //turn 90 degrees left and drive forward distance of 4000 (arbitrary length) with full modulation
+//    motorDirDist(-90, 4000, 100);
     
-//    motorDirStart(180, true, 20);
-//    delay(3000);
+    //turn 90 degrees right and drive backward distance of 2000 (arbitrary length) with full modulation
+//    motorDirDist(90, -2000, 90);
+    
+    motorDirDist(90, 4000, 50);
+    
+    //don't turn and start driving forward indefinitely with full modulation
+//    motorDirStart(0, true, 100);
+
+    //let it drive for 5 seconds
+//    delay(5000);
+
+    //stop driving
 //    motorStop();
     
     //end
