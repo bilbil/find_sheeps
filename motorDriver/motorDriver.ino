@@ -21,6 +21,8 @@
   
  */
 
+
+
  // calibration constants
  #define CALIBRATE_MOTOR_ROTATE 15  //90 degree turn: 5V supply voltage: 60 at 70% duty, 7.5V supply: 20 at 50% duty, 5V supply and 85%: 32, 45 degree at 5V,85%: 
  #define CALIBRATE_MOTOR_STRAIGHT 1
@@ -597,7 +599,7 @@ void motorDutySet(int left, int right)    // function for PWM duty setpoint
     MOTORDUTYRIGHTSET = right;
 }
 
-int motorStop()  //public function for stopping the robot
+void motorStop()  //public function for stopping the robot
 {   
       ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
       { 
@@ -620,5 +622,4 @@ int motorStop()  //public function for stopping the robot
         BIN1 = true;    //pin 12  -> BIN1  off (right motor)
         BIN2 = true;    //pin 13  -> BIN2  off (right motor)
       }
-      return 0;
 }
