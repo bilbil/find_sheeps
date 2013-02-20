@@ -233,22 +233,22 @@ void loop()  {
     //turn 90 degrees left and drive forward distance of 4000 (arbitrary length) with full modulation
 //    motorDirDist(-10, 0, 70);
     
-    delay(2000);
+    delay(1000);
     
-//    motorDirDist(90, 0, 75);
+//    motorDirDist(180, 0, 75);
 //    motorDirDist(-90, 0, 75);
 //    motorDirDist(90, 0, 75);
 //    motorDirDist(-90, 0, 75);
 
 
-//      motorDirDist(45, 0, 90);
+//      motorDirDist(0, 3000, 80);
       
 //    
-//    motorStartRotate(true, 75);
+    motorStartRotate(true, 75);
 //
-//    delay(5000);
+    delay(1000);
 //    
-//    motorStop();
+    motorStop();
 //    
 //    motorStartRotate(true, 50);
 //    
