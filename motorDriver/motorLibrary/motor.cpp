@@ -358,8 +358,8 @@ void motor::compAInterrupt()          // timer compare interrupt service routine
 
      if(motor::MOTORDUTYLEFT != 100)         //set motor output AIN1, AIN2 to low
      { 
-         digitalWrite(motor::AIN1PIN,0);
-         digitalWrite(motor::AIN2PIN,0);
+         digitalWrite(motor::AIN1PIN,1);
+         digitalWrite(motor::AIN2PIN,1);
          
          OCR2A = motor::MOTORDUTYLEFT*255/100;            // set compare registers to duty
      }
@@ -369,8 +369,8 @@ void motor::compBInterrupt()           // timer compare interrupt service routin
 {
      if(motor::MOTORDUTYRIGHT != 100)         //set motor output BIN1, BIN2 to low
      { 
-         digitalWrite(motor::BIN1PIN, 0);
-         digitalWrite(motor::BIN2PIN, 0);
+         digitalWrite(motor::BIN1PIN, 1);
+         digitalWrite(motor::BIN2PIN, 1);
          
          OCR2B = motor::MOTORDUTYRIGHT*255/100;            // set compare registers to duty
      }     
