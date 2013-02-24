@@ -64,6 +64,10 @@ class motor
 	static void motorDutyEase(int left, int right, float adjustFactor);	//function for PWM duty easing using duty setpoints
 	static void motorDir(int dir, int modulation);	// internal helper function for turning the robot
 	
+	static void compAInterrupt();
+	static void compBInterrupt();
+	static void overFlowInterrupt();
+	
   private:
  
 };

@@ -22,6 +22,11 @@ volatile int motor::MOTORONDURATION = 0;  //motor PWM on duration
 motor::motor()	//constructor
 {
     noInterrupts();  
+	
+	AIN1 = false;
+	AIN2 = false;
+	BIN1 = false;
+	BIN2 = false;
   
     pinMode(AIN1PIN, OUTPUT);
     pinMode(AIN2PIN, OUTPUT);
@@ -353,32 +358,31 @@ void motor::motorDutyEase(int left, int right, float adjustFactor)
       MOTORDUTYRIGHT = currentRight;
 }
 
-void motor::compAInterrupt()          // timer compare interrupt service routine
+void motor::compAInterrupt()
 {
-
-     if(motor::MOTORDUTYLEFT != 100)         //set motor output AIN1, AIN2 to low
+	if(motor::MOTORDUTYLEFT != 100)         //set motor output AIN1, AIN2 to low
      { 
-         digitalWrite(motor::AIN1PIN,1);
-         digitalWrite(motor::AIN2PIN,1);
+         digitalWrite(AIN1PIN,0);
+         digitalWrite(AIN2PIN,0);
          
          OCR2A = motor::MOTORDUTYLEFT*255/100;            // set compare registers to duty
      }
 }
 
-void motor::compBInterrupt()           // timer compare interrupt service routine
+void motor::compBInterrupt()
 {
-     if(motor::MOTORDUTYRIGHT != 100)         //set motor output BIN1, BIN2 to low
+	if(motor::MOTORDUTYRIGHT != 100)         //set motor output BIN1, BIN2 to low
      { 
-         digitalWrite(motor::BIN1PIN, 1);
-         digitalWrite(motor::BIN2PIN, 1);
+         digitalWrite(BIN1PIN, 0);
+         digitalWrite(BIN2PIN, 0);
          
          OCR2B = motor::MOTORDUTYRIGHT*255/100;            // set compare registers to duty
-     }     
+     }  
 }
 
-void motor::overFlowInterrupt()        // interrupt service routine Timer 2 for motor control
+void motor::overFlowInterrupt()
 {
-    int dur;
+	    int dur;
     
     ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
     {
@@ -463,20 +467,20 @@ void motor::overFlowInterrupt()        // interrupt service routine Timer 2 for 
      {   
        if(motor::AIN1 == true)      //left motor AIN1
        {
-          digitalWrite(motor::AIN1PIN,1);
+          digitalWrite(AIN1PIN,1);
        }
        else
        {
-          digitalWrite(motor::AIN1PIN, 0);
+          digitalWrite(AIN1PIN, 0);
        }
        
        if(motor::AIN2 == true)     //left motor AIN2
        {
-          digitalWrite(motor::AIN2PIN, 1);
+          digitalWrite(AIN2PIN, 1);
        }
        else
        {
-          digitalWrite(motor::AIN2PIN, 0);
+          digitalWrite(AIN2PIN, 0);
        }
      }
      
@@ -484,24 +488,23 @@ void motor::overFlowInterrupt()        // interrupt service routine Timer 2 for 
     { 
        if(motor::BIN1 == true)     //right motor BIN1
        {
-          digitalWrite(motor::BIN1PIN, 1);
+          digitalWrite(BIN1PIN, 1);
        }
        else
        {
-          digitalWrite(motor::BIN1PIN, 0);
+          digitalWrite(BIN1PIN, 0);
        }
        
        if(motor::BIN2 == true)     //right motor BIN2
        {
-          digitalWrite(motor::BIN2PIN, 1);
+          digitalWrite(BIN2PIN, 1);
        }
        else
        {
-          digitalWrite(motor::BIN2PIN, 0);
+          digitalWrite(BIN2PIN, 0);
        }  
     }
 }
-
 ISR(TIMER2_COMPA_vect)          // timer compare interrupt service routine
 {
 	motor::compAInterrupt();
@@ -509,7 +512,7 @@ ISR(TIMER2_COMPA_vect)          // timer compare interrupt service routine
 
 ISR(TIMER2_COMPB_vect)          // timer compare interrupt service routine
 {
-	motor::compBInterrupt();
+    motor::compBInterrupt();
 }
 
 ISR(TIMER2_OVF_vect)        // interrupt service routine Timer 2 for motor control
