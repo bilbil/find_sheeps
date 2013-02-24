@@ -24,7 +24,7 @@ OCR2B compare interrupt for PWM duty of BIN1, BIN2
 #include "Arduino.h"
 
 // calibration constants
-#define CALIBRATE_MOTOR_ROTATE 15  //90 degree turn: 5V supply voltage: 60 at 70% duty, 7.5V supply: 20 at 50% duty, 5V supply and 85%: 32, 45 degree at 5V,85%: 
+#define CALIBRATE_MOTOR_ROTATE 30  //90 degree turn: 5V supply voltage: 60 at 70% duty, 7.5V supply: 20 at 50% duty, 5V supply and 85%: 32, 45 degree at 5V,85%: 
 #define CALIBRATE_MOTOR_STRAIGHT 1
 
 #include <util/atomic.h>

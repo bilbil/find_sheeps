@@ -409,7 +409,7 @@ void motor::overFlowInterrupt()
     }
     
     int adjustDuration = motor::MOTORONDURATIONSET/8;
-    float adjustThresholdFactor = 0.8;
+    float adjustThresholdFactor = 0.5;
     int timeToMidDuration;
     float adjustmentFactor = 0;
     
