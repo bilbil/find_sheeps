@@ -9,6 +9,11 @@
 #define GRIDSENS_BACK_LEFT   6
 #define GRIDSENS_FRONT_RIGHT 4
 #define GRIDSENS_FRONT_LEFT  5	
+
+#define TURNLEFT 0
+#define TURNRIGHT 1
+#define STAY 2
+#define STRAIGHT 3
 	
 class sensor
 {
@@ -19,15 +24,9 @@ class sensor
 	static void rotate90Left();
 	static void rotate90Right();
 	
-	static boolean BACKALIGN;
-	static boolean EVALCROSSTILE;
 	static int DEBOUNCE;
-	volatile static boolean ONTILE;			// flag for on entering each tile cross
-	static boolean KEEPSTRAIGHT;	//flag for keeping robot on straight
-	volatile static boolean STAY;			//flag for telling robot to stay on current tile cross
-	static int GRIDCOUNT;			//counter to count to user specified count
+	static int ACTION;				//state of the robot
 	volatile static int GOGRIDCOUNT; 		//user specified tile count
-	static void setStraight(boolean val);	
 	static void process();
 	static boolean getFrontLeftWhite();
 	static boolean getFrontRightWhite();

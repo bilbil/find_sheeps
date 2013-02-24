@@ -11,105 +11,121 @@ sensor::sensor()	//constructor
 	pinMode(GRIDSENS_FRONT_RIGHT, INPUT);
 	pinMode(GRIDSENS_FRONT_LEFT, INPUT);
 	
-	myMotor = motor();
+	myMotor = motor();	//setup motor settings
 }
 
-boolean sensor::KEEPSTRAIGHT = false;
-volatile boolean sensor::STAY = false;
-int sensor::GRIDCOUNT = 0;
+int sensor::ACTION = false;
 volatile int sensor::GOGRIDCOUNT = 0;
-volatile boolean sensor::ONTILE = false;
 int sensor::DEBOUNCE = 0;
-boolean sensor::EVALCROSSTILE = false;
-boolean sensor::BACKALIGN = false;
-
-void sensor::setStraight(boolean val)
-{
-	KEEPSTRAIGHT = val;
-}
 
 void sensor::goStraightTile(int val)
 {
-	STAY = false;
+	ACTION = STRAIGHT;
 	DEBOUNCE = 0;
 	GOGRIDCOUNT = val;
-	setStraight(true);
-	EVALCROSSTILE = true;
-	boolean currentStay;
+	boolean currentAction;
 	do
     {   
-		currentStay = STAY;
-    }while(currentStay == false);
+		currentAction = ACTION;
+    }while(currentAction != STAY);
 }
 
 void sensor::rotate90Left()
 {
-	EVALCROSSTILE = false;
-	myMotor.motorDirDist(90, 0, 90);
+	ACTION = TURNLEFT;
+	DEBOUNCE = 0;
+	boolean currentAction;
+	do
+    {   
+		currentAction = ACTION;
+    }while(currentAction != STAY);
 }
 
 void sensor::rotate90Right()
 {
-	EVALCROSSTILE = false;
-	myMotor.motorDirDist(-90, 0, 90);
+	ACTION = TURNRIGHT;
+	DEBOUNCE = 0;
+	boolean currentAction;
+	do
+    {   
+		currentAction = ACTION;
+    }while(currentAction != STAY);
 }
 
 void sensor::process()
-{	
-	if(getFrontLeftWhite() == true && getFrontRightWhite() == true	// when robot crosses a tile cross
-	&& getBackLeftWhite() == false && getBackRightWhite() == false 
-	&& EVALCROSSTILE == true) 
-	{	
-		if(ONTILE == false && DEBOUNCE > 100)
-		{
-			DEBOUNCE = 0;
-			
-			ONTILE = true;	// set ONTILE flag off
-			
-			GOGRIDCOUNT--;	//count on entering each tile cross
-			
-			if(GOGRIDCOUNT <= 0)	// when robot passes a defined number of tile crosses
-			{
-				myMotor.motorStop();
-				BACKALIGN = true;
-				STAY = true;
-				EVALCROSSTILE = false;
-			}
-		}
-	}
-		  
-	if(KEEPSTRAIGHT == true && STAY == false)	// guide robot straight
+{			  
+	if(ACTION == STRAIGHT)	// guide robot straight
 	{
 		  if (getFrontLeftWhite() == true && getFrontRightWhite() == true)
 		  {
+				if(getBackLeftWhite() == false && getBackRightWhite() == false)
+				{
+					if(DEBOUNCE > 100)	//debounce grid sensor to get accurate crossing
+					{
+						DEBOUNCE = 0;
+						GOGRIDCOUNT--;	//count on entering each tile cross
+						
+						if(GOGRIDCOUNT <= 0)	// when robot passes a defined number of tile crosses
+						{
+							myMotor.motorStop();
+							ACTION = STAY;
+						}
+					}
+				}
 			  myMotor.motorStart(true,70,70);
-			  if(ONTILE == true)
-			  {
-				 ONTILE = false;
-			  }
 		  }
 		  else if (getFrontLeftWhite() == true && getFrontRightWhite() == false)
 		  {
 			  myMotor.motorStart(true,75,40);
-			  // motor::motorDutySet(75,40);
 		  }
 		  else if (getFrontLeftWhite() == false && getFrontRightWhite() == true)
 		  {
 			  myMotor.motorStart(true,40,75);
-			  // motor::motorDutySet(40,75);
 		  }
 		  else
 		  {
-			  if(STAY == false)
-			  {
-					myMotor.motorStart(true,60,60);
-					// motor::motorDutySet(40,40);
-			  }
-			  
-			  
 			  DEBOUNCE++;
-			  
 		  }
+	}
+	else if(ACTION == TURNLEFT)
+	{
+		if(getFrontLeftWhite() == true)		
+		{
+			if(DEBOUNCE > 100)
+			{
+				motor::motorStop();
+				ACTION = STAY;
+			}
+			else
+			{
+				motor::motorStartRotate(true, 40);
+			}
+		}
+		else
+		{
+			motor::motorStartRotate(true, 60);
+			DEBOUNCE++;
+		}
+	}
+	else if(ACTION == TURNRIGHT)
+	{
+		if(getFrontRightWhite() == true)		
+		{
+			if(DEBOUNCE > 100)
+			{
+				motor::motorStop();
+				ACTION = STAY;
+			}
+			else
+			{
+				motor::motorStartRotate(true, 40);
+			}
+		}
+		else
+		{
+			motor::motorStartRotate(true, 60);
+			DEBOUNCE++;
+		}
 	}
 }
 
