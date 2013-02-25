@@ -58,7 +58,8 @@ class motor
 	
     static void motorStartRotate(boolean left, int modulation);	// public function for rotating robot until motorStop is called
     static int motorDirDist(int dir, int dist, int modulation);	//public function for turning robot and move a certain distance
-    static int motorStart(boolean forward,int modulationLeft, int modulationRight);	//public function for moving indefinitely
+    static int motorDistNoBlock(int dist, int modulation);
+	static int motorStart(boolean forward,int modulationLeft, int modulationRight);	//public function for moving indefinitely
     static void motorDutySet(int left, int right);	// function for PWM duty setpoint
     static void motorStop();	//public function for stopping the robot
 	static void motorDutyEase(int left, int right, float adjustFactor);	//function for PWM duty easing using duty setpoints

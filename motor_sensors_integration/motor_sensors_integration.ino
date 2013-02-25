@@ -17,23 +17,19 @@ void loop()
   
   delay(2000);
 
-  mySensor.goStraightTile(2);
-  
-  delay(1000);
-  
-  mySensor.rotate90Left();
-  
-  delay(1000);
-  
-  mySensor.goStraightTile(2);
-  
-  delay(2000);
-//  
-//  delay(500);
+//  mySensor.goStraightTile(2);
 //  
 //  mySensor.rotate90Left();
 //  
-//  delay(500);
+//  mySensor.goStraightTile(2);
+//  
+//  mySensor.rotate90Right();
+  
+  mySensor.goStraightTile(4);
+  
+  mySensor.rotate180Right();
+  
+  mySensor.goStraightTile(4);
   
   while(1)
   {

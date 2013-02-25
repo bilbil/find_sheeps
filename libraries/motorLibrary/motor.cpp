@@ -81,11 +81,11 @@ void motor::motorStartRotate(boolean left, int modulation)
           {
             RUNFOREVER = true;
             
-            AIN1 = true;     //pin 10  -> AIN1 on (left motor)
-            AIN2 = false;    //pin 11  -> AIN2 off (left motor)
-          
-            BIN1 = false;    //pin 12  -> BIN1 off (right motor)
-            BIN2 = true;     //pin 13  -> BIN2 on (right motor)
+            AIN1 = true;    //pin 10  -> AIN1 on (left motor)
+            AIN2 = false;     //pin 11  -> AIN2 off (left motor)
+            
+            BIN1 = false;     //pin 12  -> BIN1 off (right motor)
+            BIN2 = true;    //pin 13  -> BIN2 on (right motor)
         
             MOTORONDURATIONSET = 1;
             MOTORONDURATION = 1;
@@ -175,6 +175,63 @@ int motor::motorDirDist(int dir, int dist, int modulation)
       return 0;
 }
 
+int motor::motorDistNoBlock(int dist, int modulation)
+{
+	 if(MOTORONDURATION == 0)
+	 {
+		 //initialize duration for going straight; exact formula yet to be determined
+		  int durationForward = dist * CALIBRATE_MOTOR_STRAIGHT / modulation * 100 ; 
+
+		  //set modulation 0-100
+		  if (modulation < 1 || modulation > 100)
+		  {
+			  return -1;
+		  }
+		 
+		  //distance to go straight forward or backward, exact range yet to be determined
+		  if(dist < -10000 || dist > 10000)
+		  {    
+			  return -1;
+		  }
+		 
+		  motorDutySet(modulation, modulation);
+		  
+		  if(durationForward > 0)          //move robot straight
+		  {
+			  ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+			  {
+				RUNFOREVER = false;
+				
+				AIN1 = true;      //pin 10  -> AIN1 on (left motor)
+				AIN2 = false;     //pin 11  -> AIN2 off (left motor)
+				
+				BIN1 = true;      //pin 12  -> BIN1 on (right motor)
+				BIN2 = false;     //pin 13  -> BIN2 off (right motor)
+	  
+				MOTORONDURATIONSET = durationForward;
+				MOTORONDURATION = durationForward;    
+			  }   
+		  }
+		  else if(durationForward < 0)     //move backward
+		  {   
+			  ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+			  {
+				RUNFOREVER = false;
+				
+				AIN1 = false;     //pin 10  -> AIN1 off (left motor)
+				AIN2 = true;      //pin 11  -> AIN2 on (left motor)
+				
+				BIN1 = false;     //pin 12  -> BIN1 off (right motor)
+				BIN2 = true;      //pin 13  -> BIN2 on (right motor)
+				
+				MOTORONDURATIONSET = -1* durationForward;
+				MOTORONDURATION = -1* durationForward; 
+			  }
+		  }
+     }
+      return 0;
+}
+
 int motor::motorStart(boolean forward,int modulationLeft, int modulationRight)
 {
       //set modulation 0-100
@@ -246,17 +303,17 @@ void motor::motorStop()
         MOTORONDURATIONSET = 50;
         MOTORONDURATION = 50;    //0 duration on for motors
         
-//        AIN1 = false;    //pin 10  -> AIN1  off (left motor)
-//        AIN2 = false;    //pin 11  -> AIN2  off (left motor)
-//        
-//        BIN1 = false;    //pin 12  -> BIN1  off (right motor)
-//        BIN2 = false;    //pin 13  -> BIN2  off (right motor)
+       AIN1 = false;    //pin 10  -> AIN1  off (left motor)
+       AIN2 = false;    //pin 11  -> AIN2  off (left motor)
+       
+       BIN1 = false;    //pin 12  -> BIN1  off (right motor)
+       BIN2 = false;    //pin 13  -> BIN2  off (right motor)
         
-        AIN1 = true;    //pin 10  -> AIN1  off (left motor)
-        AIN2 = true;    //pin 11  -> AIN2  off (left motor)
+        // AIN1 = true;    //pin 10  -> AIN1  off (left motor)
+        // AIN2 = true;    //pin 11  -> AIN2  off (left motor)
         
-        BIN1 = true;    //pin 12  -> BIN1  off (right motor)
-        BIN2 = true;    //pin 13  -> BIN2  off (right motor)
+        // BIN1 = true;    //pin 12  -> BIN1  off (right motor)
+        // BIN2 = true;    //pin 13  -> BIN2  off (right motor)
       }
 }
 
@@ -309,7 +366,7 @@ void motor::motorDutyEase(int left, int right, float adjustFactor)
      int currentLeft = motor::MOTORDUTYLEFT;
      int currentRight = motor::MOTORDUTYRIGHT;
      
-     boolean leftGoingUp;
+     /* boolean leftGoingUp;
      boolean rightGoingUp;
      
      int leftError, rightError;
@@ -352,10 +409,15 @@ void motor::motorDutyEase(int left, int right, float adjustFactor)
           rightError = right - currentRight;
 //          currentRight = currentRight + (int)((float)rightError/(float)50);
           currentRight = currentRight + (int)((float)rightError * adjustFactor);
-      }
-      
+      } */
+	  
+	  currentLeft = left;
+	  currentRight = right;
+	  
       MOTORDUTYLEFT = currentLeft;
-      MOTORDUTYRIGHT = currentRight;
+	  
+	  MOTORDUTYRIGHT = currentRight;
+      
 }
 
 void motor::compAInterrupt()
@@ -390,15 +452,15 @@ void motor::overFlowInterrupt()
     }
     if(dur <= 0)
     {
-//       AIN1 = false;
-//       AIN2 = false;
-//       BIN1 = false;
-//       BIN2 = false;
+      AIN1 = false;
+      AIN2 = false;
+      BIN1 = false;
+      BIN2 = false;
        
-       motor::AIN1 = true;
-       motor::AIN2 = true;
-       motor::BIN1 = true;
-       motor::BIN2 = true;
+       // motor::AIN1 = true;
+       // motor::AIN2 = true;
+       // motor::BIN1 = true;
+       // motor::BIN2 = true;
     }
     
     boolean getRunForever;
@@ -415,7 +477,7 @@ void motor::overFlowInterrupt()
     
     if(getRunForever == false)    // if  motor is not running indefinitely
     {        
-          if(motor::MOTORONDURATIONSET -  motor::MOTORONDURATION < adjustDuration && motor::MOTORONDURATION > motor::MOTORONDURATIONSET/2)    // in 1st half of duration
+          /* if(motor::MOTORONDURATIONSET -  motor::MOTORONDURATION < adjustDuration && motor::MOTORONDURATION > motor::MOTORONDURATIONSET/2)    // in 1st half of duration
           {
               adjustmentFactor = ((float)(motor::MOTORONDURATIONSET - motor::MOTORONDURATION))/(float)adjustDuration;  // factor to ramp up the speed
               
@@ -440,26 +502,19 @@ void motor::overFlowInterrupt()
               {
                   motor::motorDutyEase(0, 0, adjustmentFactor); 
               }
-          }
-        
-//        if(dur < 200)                                        //motor PWM ease
-//        {
-//            motorDutyEase(0,0);                             //slow down
-//        }
-//        else if(MOTORONDURATIONSET - MOTORONDURATION < 200)  
-//        {
-//            motorDutyEase(MOTORDUTYLEFTSET, MOTORDUTYRIGHTSET);    //speed up
-//        }
+		  } */
         
         if(motor::MOTORONDURATION > 0)
         {
           motor::MOTORONDURATION = motor::MOTORONDURATION - 1;  //decrease timer for motor on duration 
         }
-    }
+		
+		motor::motorDutyEase(motor::MOTORDUTYLEFTSET, motor::MOTORDUTYRIGHTSET, 1); 
+	}
     else                          // if motor is running forever
-    {
+	{
         motor::motorDutyEase(motor::MOTORDUTYLEFTSET, motor::MOTORDUTYRIGHTSET, 1);    //speed up
-    }
+	}
 
      TCNT2 = 0;       // preload timer range 0 - 255 counting up
    
