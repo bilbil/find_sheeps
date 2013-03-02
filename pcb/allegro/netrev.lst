@@ -1,0 +1,87 @@
+(---------------------------------------------------------------------)
+(                                                                     )
+(    Netrev Allegro Import Logic                                      )
+(                                                                     )
+(    Drawing          : shepard.brd                                   )
+(    Software Version : 16.3p004                                      )
+(    Date/Time        : Fri Mar 01 23:21:40 2013                      )
+(                                                                     )
+(---------------------------------------------------------------------)
+
+
+------ Directives ------
+
+RIPUP_ETCH FALSE;
+RIPUP_SYMBOLS ALWAYS;
+Missing symbol has error FALSE;
+SCHEMATIC_DIRECTORY 'c:\users\yuan\documents\github\find_sheeps\pcb\allegro';
+BOARD_DIRECTORY '';
+OLD_BOARD_NAME 'C:/Users/Yuan/Documents/GitHub/find_sheeps/pcb/allegro/shepard.brd';
+NEW_BOARD_NAME 'shepard_2.brd';
+
+CmdLine: netrev.exe -5 -y 1 -i c:\users\yuan\documents\github\find_sheeps\pcb\allegro C:\Users\Yuan\Documents\GitHub\find_sheeps\pcb\allegro\shepard.brd c:\users\yuan\documents\github\find_sheeps\pcb\allegro\shepard_2.brd
+
+------ Preparing to read pst files ------
+
+Starting to read c:/users/yuan/documents/github/find_sheeps/pcb/allegro/pstchip.dat 
+   Finished reading c:/users/yuan/documents/github/find_sheeps/pcb/allegro/pstchip.dat (00:00:00.10)
+Starting to read c:/users/yuan/documents/github/find_sheeps/pcb/allegro/pstxprt.dat 
+   Finished reading c:/users/yuan/documents/github/find_sheeps/pcb/allegro/pstxprt.dat (00:00:00.00)
+Starting to read c:/users/yuan/documents/github/find_sheeps/pcb/allegro/pstxnet.dat 
+   Finished reading c:/users/yuan/documents/github/find_sheeps/pcb/allegro/pstxnet.dat (00:00:00.00)
+
+------ Oversights/Warnings/Errors ------
+
+
+------ Library Paths ------
+MODULEPATH =  . 
+           C:/Cadence/SPB_16.3/share/local/pcb/modules 
+
+PSMPATH =  . 
+           symbols 
+           .. 
+           ../symbols 
+           C:/Cadence/SPB_16.3/share/local/pcb/symbols 
+           C:/Cadence/SPB_16.3/share/pcb/pcb_lib/symbols 
+           C:/Cadence/SPB_16.3/share/pcb/allegrolib/symbols 
+
+PADPATH =  . 
+           symbols 
+           .. 
+           ../symbols 
+           C:/Cadence/SPB_16.3/share/local/pcb/padstacks 
+           C:/Cadence/SPB_16.3/share/pcb/pcb_lib/symbols 
+           C:/Cadence/SPB_16.3/share/pcb/allegrolib/symbols 
+
+
+------ Summary Statistics ------
+
+
+netrev run on Mar 1 23:21:40 2013
+   DESIGN NAME : 'SHEPARD'
+   PACKAGING ON Nov 17 2009 03:09:43
+
+   COMPILE 'logic'
+   CHECK_PIN_NAMES OFF
+   CROSS_REFERENCE OFF
+   FEEDBACK OFF
+   INCREMENTAL OFF
+   INTERFACE_TYPE PHYSICAL
+   MAX_ERRORS 500
+   MERGE_MINIMUM 5
+   NET_NAME_CHARS '#%&()*+-./:=>?@[]^_`|'
+   NET_NAME_LENGTH 24
+   OVERSIGHTS ON
+   REPLACE_CHECK OFF
+   SINGLE_NODE_NETS ON
+   SPLIT_MINIMUM 0
+   SUPPRESS   20
+   WARNINGS ON
+
+ No error detected
+ No oversight detected
+ No warning detected
+
+cpu time      0:01:33
+elapsed time  0:00:01
+

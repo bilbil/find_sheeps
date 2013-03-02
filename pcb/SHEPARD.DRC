@@ -1,0 +1,11 @@
+
+--------------------------------------------------
+Checking Schematic: SCHEMATIC1
+--------------------------------------------------
+Checking Electrical Rules 
+
+Checking For Single Node Nets
+WARNING:  [DRC0006]  Net has fewer than two connections VSUPPLY
+                    SCHEMATIC1, PAGE1  (6.70, 2.00) 
+
+Checking For Unconnected Bus Nets

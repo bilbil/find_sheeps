@@ -1,0 +1,70 @@
+FILE_TYPE = EXPANDEDPARTLIST;
+{ Using PSTWRITER 16.3.0 p002Mar-01-2013 at 20:35:57 }
+DIRECTIVES
+ PST_VERSION='PST_HDL_CENTRIC_VERSION_0';
+ ROOT_DRAWING='SHEPARD';
+ POST_TIME='Nov 17 2009 03:09:43';
+ SOURCE_TOOL='CAPTURE_WRITER';
+END_DIRECTIVES;
+
+PART_NAME
+ J1 'DIPSOC-14X2_DIP28_DIPSOC-14X2':;
+
+SECTION_NUMBER 1
+ '@SHEPARD.SCHEMATIC1(SCH_1):INS2930@MECHANICAL.DIPSOC-14X2.NORMAL(CHIPS)':
+ C_PATH='@shepard.schematic1(sch_1):ins2930@mechanical.\dipsoc-14x2.normal\(chips)',
+ P_PATH='@shepard.schematic1(sch_1):page1_ins2930@mechanical.\dipsoc-14x2.normal\(chips)',
+ PRIM_FILE='.\pstchip.dat',
+ SECTION='';
+
+PART_NAME
+ R10 'RESISTOR_0_RES500_5K':;
+
+SECTION_NUMBER 1
+ '@SHEPARD.SCHEMATIC1(SCH_1):INS3275@SHEPARD.RESISTOR_0.NORMAL(CHIPS)':
+ C_PATH='@shepard.schematic1(sch_1):ins3275@shepard.\resistor_0.normal\(chips)',
+ P_PATH='@shepard.schematic1(sch_1):page1_ins3275@shepard.\resistor_0.normal\(chips)',
+ PRIM_FILE='.\pstchip.dat',
+ SECTION='';
+
+PART_NAME
+ R11 'RESISTOR_0_RES500_5K':;
+
+SECTION_NUMBER 1
+ '@SHEPARD.SCHEMATIC1(SCH_1):INS3301@SHEPARD.RESISTOR_0.NORMAL(CHIPS)':
+ C_PATH='@shepard.schematic1(sch_1):ins3301@shepard.\resistor_0.normal\(chips)',
+ P_PATH='@shepard.schematic1(sch_1):page1_ins3301@shepard.\resistor_0.normal\(chips)',
+ PRIM_FILE='.\pstchip.dat',
+ SECTION='';
+
+PART_NAME
+ R12 'RESISTOR_0_RES500_5K':;
+
+SECTION_NUMBER 1
+ '@SHEPARD.SCHEMATIC1(SCH_1):INS3327@SHEPARD.RESISTOR_0.NORMAL(CHIPS)':
+ C_PATH='@shepard.schematic1(sch_1):ins3327@shepard.\resistor_0.normal\(chips)',
+ P_PATH='@shepard.schematic1(sch_1):page1_ins3327@shepard.\resistor_0.normal\(chips)',
+ PRIM_FILE='.\pstchip.dat',
+ SECTION='';
+
+PART_NAME
+ R9 'RESISTOR_0_RES500_5K':;
+
+SECTION_NUMBER 1
+ '@SHEPARD.SCHEMATIC1(SCH_1):INS3123@SHEPARD.RESISTOR_0.NORMAL(CHIPS)':
+ C_PATH='@shepard.schematic1(sch_1):ins3123@shepard.\resistor_0.normal\(chips)',
+ P_PATH='@shepard.schematic1(sch_1):page1_ins3123@shepard.\resistor_0.normal\(chips)',
+ PRIM_FILE='.\pstchip.dat',
+ SECTION='';
+
+PART_NAME
+ U2 'L298/SO_1_SOIC20_L298/SO':;
+
+SECTION_NUMBER 1
+ '@SHEPARD.SCHEMATIC1(SCH_1):INS4446@SHEPARD.L298/SO_1.NORMAL(CHIPS)':
+ C_PATH='@shepard.schematic1(sch_1):ins4446@shepard.\l298/so_1.normal\(chips)',
+ P_PATH='@shepard.schematic1(sch_1):page1_ins4446@shepard.\l298/so_1.normal\(chips)',
+ PRIM_FILE='.\pstchip.dat',
+ SECTION='';
+
+END.

@@ -1,0 +1,16 @@
+{ Using PSTWRITER 16.3.0 p002Mar-01-2013 at 23:21:39 }
+
+#1 Warning [ALG0051] Pin "GND" is renamed to "GND#1" as visible power pin of same name already exists in Package L298/SO_2 , U2: SCHEMATIC1, PAGE1 (7.00, 0.80).
+#2 Warning [ALG0051] Pin "GND" is renamed to "GND#20" as visible power pin of same name already exists in Package L298/SO_2 , U2: SCHEMATIC1, PAGE1 (7.00, 0.80).
+#3 Warning [ALG0051] Pin "GND" is renamed to "GND#10" as visible power pin of same name already exists in Package L298/SO_2 , U2: SCHEMATIC1, PAGE1 (7.00, 0.80).
+#4 Warning [ALG0051] Pin "GND" is renamed to "GND#11" as visible power pin of same name already exists in Package L298/SO_2 , U2: SCHEMATIC1, PAGE1 (7.00, 0.80).
+Scanning netlist files ...
+
+Loading... c:\users\yuan\documents\github\find_sheeps\pcb\allegro/pstchip.dat
+
+Loading... c:\users\yuan\documents\github\find_sheeps\pcb\allegro/pstchip.dat
+
+Loading... c:\users\yuan\documents\github\find_sheeps\pcb\allegro/pstxprt.dat
+
+Loading... c:\users\yuan\documents\github\find_sheeps\pcb\allegro/pstxnet.dat
+packaging the design view...

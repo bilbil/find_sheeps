@@ -1,0 +1,60 @@
+\t (00:00:03) allegro 16.3 p006 (v16-3-85F) i86
+\t (00:00:03) 
+
+\t (00:00:47) Starting new drawing...
+\i (00:00:47) trapsize 1068
+\i (00:00:47) trapsize 1034
+\i (00:00:47) trapsize 1020
+\i (00:00:47) trapsize 854
+\i (00:00:47) trapsize 1601
+\i (00:01:08) new 
+\i (00:01:27) newdrawfillin "robot.brd" "Board (Wizard)"
+\t (00:01:27) Starting new drawing...
+\i (00:01:27) trapsize 1601
+\i (00:01:27) trapsize 1601
+\i (00:01:27) layout wizard 
+\i (00:01:27) generaledit 
+\i (00:01:29) setwindow form.brd_wizard
+\i (00:01:29) FORM brd_wizard wiz_next  
+   (00:01:29) Loading cmds.cxt 
+   (00:01:29) Loading axlcore.cxt 
+\i (00:01:39) FORM brd_wizard wiz_next  
+\i (00:01:43) FORM brd_wizard wiz_next  
+\i (00:01:44) FORM brd_wizard wiz_back  
+\i (00:01:45) FORM brd_wizard wiz_next  
+\i (00:01:46) FORM brd_wizard wiz_next  
+\i (00:01:47) FORM brd_wizard wiz_back  
+\t (00:01:47) Starting new drawing...
+\i (00:01:48) setwindow pcb
+\i (00:01:48) trapsize 1601
+\i (00:01:48) trapsize 1601
+\i (00:01:49) setwindow form.brd_wizard
+\i (00:01:49) FORM brd_wizard wiz_next  
+\i (00:01:49) FORM brd_wizard wiz_back  
+\t (00:01:49) Starting new drawing...
+\i (00:01:50) setwindow pcb
+\i (00:01:50) trapsize 1601
+\i (00:01:50) trapsize 1601
+\i (00:01:51) setwindow form.brd_wizard
+\i (00:01:51) FORM brd_wizard wiz_next  
+\i (00:01:57) FORM brd_wizard wiz_next  
+\i (00:01:59) FORM brd_wizard wiz_next  
+\i (00:02:02) FORM brd_wizard wiz_next  
+\i (00:02:04) FORM brd_wizard wiz_next  
+\i (00:02:05) fillin confirm
+\i (00:02:06) FORM brd_wizard cancel  
+\t (00:02:06) Starting new drawing...
+\i (00:02:06) setwindow pcb
+\i (00:02:06) trapsize 1601
+\i (00:02:06) trapsize 1601
+\i (00:02:06) generaledit 
+\i (00:02:08) new 
+\i (00:02:13) newdrawfillin "robot.brd" "Board"
+\t (00:02:13) Starting new drawing...
+\i (00:02:13) trapsize 1601
+\i (00:02:13) trapsize 1601
+\i (00:02:13) generaledit 
+\i (00:02:17) save_as 
+\i (00:02:19) fillin "robot.brd"
+\i (00:02:20) generaledit 
+\i (00:08:27) exit 

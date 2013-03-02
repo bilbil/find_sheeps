@@ -1,0 +1,17 @@
+#Allegro PCB Router v16-3-85 made 2009/11/03 at 11:55:32
+#Host 
+#ROUTING STATUS <<< c:/users/yuan/documents/github/find_sheeps/pcb/allegro\shepard.dsn >>>
+Start  Time: Report Time: Fri Mar 01 21:14:17 2013
+
+Nets         =       15   Connections         =       18
+Current Wire =       26   Reroute wires       =       26
+Completion   =  100.00%   Unconnections       =        0
+| ROUTING HISTORY ================================================================
+|     Pass     |   Conflicts |    |     |     |     |    |Red|      CPU Time     |
+|   Name   |No.| Cross| Clear|Fail|Unrte| Vias|XTalk|Len.| % |  Pass   |  Total  |
+|----------+---+------+------+----+-----+-----+-----+----+---+---------+---------|
+| Route    |  1|     2|     0|   0|    0|    5|    0|   0|  0|  0:00:00|  0:00:00|
+| Route    |  2|     0|     0|   0|    0|    7|    0|   0|100|  0:00:00|  0:00:00|
+| Clean    |  3|     0|     0|   0|    0|    4|    0|   0|   |  0:00:00|  0:00:00|
+| Clean    |  4|     0|     0|   0|    0|    4|    0|   0|   |  0:00:00|  0:00:00|
+| Conflicts between polygon wires and fixed objects:   0
