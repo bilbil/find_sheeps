@@ -8,18 +8,20 @@
 	
 ISR(TIMER2_COMPA_vect)          // timer compare interrupt service routine
 {
-	motor::compAInterrupt();	//call motor functions
+	// motor::compAInterrupt();	//call motor functions
 }
 
 ISR(TIMER2_COMPB_vect)          // timer compare interrupt service routine
 {
-    motor::compBInterrupt();	//call motor functions
+    // motor::compBInterrupt();	//call motor functions
 }
 
 ISR(TIMER2_OVF_vect)        	// interrupt service routine Timer 2 for motor control
 {	
-	sensor::process();			//call grid sensor functions
-	motor::overFlowInterrupt();	//call motor functions
+
+	// sensor::updateDistances();
+	// sensor::process();			//call grid sensor functions
+	// motor::overFlowInterrupt();	//call motor functions
 }
 
 #endif
