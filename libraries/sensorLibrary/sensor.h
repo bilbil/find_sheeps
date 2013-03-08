@@ -45,14 +45,15 @@ class sensor
 	static boolean getBackLeftWhite();
 	static boolean getBackRightWhite();
 	static boolean getFrontLeftWideWhite();
-	static boolean getFrontRightWideWhite();\
-	
+	static boolean getFrontRightWideWhite();
 	volatile static int distance_front;
 	volatile static int distance_left;
 	volatile static int distance_right;
 	volatile static int distance_back;
 	
 	static void updateDistances();
+	
+	static void test(int val);
 	
   private:
  

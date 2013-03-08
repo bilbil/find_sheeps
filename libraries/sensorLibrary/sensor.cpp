@@ -20,7 +20,7 @@ sensor::sensor()	//constructor
 	pinMode(GRIDSENS_FRONT_RIGHT, INPUT);
 	pinMode(GRIDSENS_FRONT_LEFT, INPUT);
 	
-	// myMotor = motor();	//setup motor settings
+	myMotor = motor();	//setup motor settings
 }
 
 volatile int sensor::ACTION = STAY;
@@ -31,6 +31,18 @@ volatile int sensor::distance_front = 0;
 volatile int sensor::distance_left = 0;
 volatile int sensor::distance_right = 0;
 volatile int sensor::distance_back = 0;
+
+void sensor::test(int val)
+{
+	if(val == 1)
+	{
+		motor::motorStart(true,90,90);
+	}
+	else
+	{
+		motor::motorStop();
+	}
+}
 
 void sensor::goStraightTile(int val)
 {
@@ -43,6 +55,11 @@ void sensor::goStraightTile(int val)
 	ACTION = STRAIGHT;
 	DEBOUNCE = 0;
 	GOGRIDCOUNT = val;
+	
+	do
+    {   
+		currentAction = ACTION;
+    }while(currentAction != STAY);
 }
 
 void sensor::rotate180Left()
@@ -69,6 +86,11 @@ void sensor::rotate90Left()
 	
 	ACTION = TURNLEFT;
 	DEBOUNCE = 0;
+	
+	do
+    {   
+		currentAction = ACTION;
+    }while(ACTION != STAY);
 }
 
 void sensor::rotate90Right()
@@ -81,6 +103,11 @@ void sensor::rotate90Right()
 	
 	ACTION = TURNRIGHT;
 	DEBOUNCE = 0;
+	
+	do
+    {   
+		currentAction = ACTION;
+    }while(ACTION != STAY);
 }
 
 /* void sensor::process()
@@ -194,27 +221,27 @@ void sensor::rotate90Right()
 
 void sensor::process()
 {			  
-	updateDistances();
+	// updateDistances();
 	
 	if(ACTION == STRAIGHT)	// guide robot straight
-	{
+	{		
 		  if (getFrontLeftWhite() == false && getFrontRightWhite() == false)
 		  {
 				if(getFrontLeftWideWhite() == false && getFrontRightWideWhite() == false)	//on black of cross
 				{
 					DEBOUNCE++;
 				}
-				myMotor.motorStart(true, 40,40);	
+				myMotor.motorStart(true, 90,90);	
 		  }
 		  else if (getFrontLeftWhite() == true && getFrontRightWhite() == false)	//need to turn right
 		  {
 			  // myMotor.motorStart(true,65,0);
-			  myMotor.motorStartRotate(false,50);
+			  myMotor.motorStartRotate(false,75);
 		  }
 		  else if (getFrontLeftWhite() == false && getFrontRightWhite() == true)	// need to turn left
 		  {
 			  // myMotor.motorStart(true,0,65);
-			  myMotor.motorStartRotate(true,50);
+			  myMotor.motorStartRotate(true,75);
 		  }
 		  else	// both on white
 		  {
@@ -233,21 +260,21 @@ void sensor::process()
 						}
 						else if(GOGRIDCOUNT > 1)	// normal speed if there is more grid tile to go
 						{
-							myMotor.motorStart(true,70,70);
+							myMotor.motorStart(true,90,90);
 						}
 						else
 						{
-							myMotor.motorStart(true,40,40);	//slow down robot on last grid cross encounter
+							myMotor.motorStart(true,70,70);	//slow down robot on last grid cross encounter
 						}
 					}
 					else
 					{
-						myMotor.motorStart(true,70,70);
+						myMotor.motorStart(true,90,90);
 					}
 				}
 				else
 				{
-					myMotor.motorStart(true,70,70);
+					myMotor.motorStart(true,90,90);
 				}
 		  }
 	}
@@ -255,20 +282,20 @@ void sensor::process()
 	{
 		if(getFrontLeftWhite() == true)		
 		{
-			if(DEBOUNCE > 300)
+			if(DEBOUNCE > 20)
 			{
 				motor::motorStop();
 				ACTION = STAY;
 			}
 			else
 			{
-				motor::motorStartRotate(true, 50);
+				motor::motorStartRotate(true, 80);
 				// motor::motorStart(true,0,65);
 			}
 		}
 		else
 		{
-			motor::motorStartRotate(true, 50);
+			motor::motorStartRotate(true, 80);
 			// motor::motorStart(true,0,65);
 			DEBOUNCE++;
 		}
@@ -277,20 +304,20 @@ void sensor::process()
 	{
 		if(getFrontRightWhite() == true)		
 		{
-			if(DEBOUNCE > 300)
+			if(DEBOUNCE > 20)
 			{
 				motor::motorStop();
 				ACTION = STAY;
 			}
 			else
 			{
-				motor::motorStartRotate(false, 50);
+				motor::motorStartRotate(false, 80);
 				// motor::motorStart(true,65,0);
 			}
 		}
 		else
 		{
-			motor::motorStartRotate(false, 50);
+			motor::motorStartRotate(false, 80);
 			// motor::motorStart(true,65,0);
 			DEBOUNCE++;
 		}
