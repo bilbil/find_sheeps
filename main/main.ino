@@ -331,5 +331,19 @@ void findLeftWall() {
 }
 
 void goHome() {
-  
+	while (posx != homex) {
+		int dx = homex - posx;
+		if (dx > 0) {
+			advance (2);
+		}
+		else if (dx < 0) {
+			advance (4);
+		}
+		else if (dx = 0) {
+			while (posy > 1) {
+				advance (3);
+			}
+			return;
+		}
+  }
 }
