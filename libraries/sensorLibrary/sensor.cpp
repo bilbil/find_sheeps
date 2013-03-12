@@ -424,5 +424,77 @@ void sensor::updateDistances()
 	distance_front = analogRead(DISTANCESENS_FRONT); 
 	distance_left = analogRead(DISTANCESENS_LEFT); 
 	distance_right = analogRead(DISTANCESENS_RIGHT); 
-	distance_back = analogRead(DISTANCESENS_BACK); 	
+	distance_back = analogRead(DISTANCESENS_BACK);
+}
+
+int getFrontGrid()
+{
+	double front_volt = (float)5/(float)1024*(float)distance_front;
+	if(front_volt>1.9)
+		grid = 0;
+	  else if(front_volt>1.3)
+		grid = 1;
+	  else if(front_volt>1.1)
+		grid = 2;
+	  else if(front_volt>0.86)
+		grid = 3;
+	  else if(front_volt>0.73)
+		grid = 4;
+	  else
+		grid = 10;
+	return grid;
+}
+
+int getLeftGrid()
+{
+	double left_volt = (float)5/(float)1024*(float)distance_left;
+	if(left_volt>1.9)
+		grid = 0;
+	  else if(left_volt>1.3)
+		grid = 1;
+	  else if(left_volt>1.1)
+		grid = 2;
+	  else if(left_volt>0.86)
+		grid = 3;
+	  else if(left_volt>0.73)
+		grid = 4;
+	  else
+		grid = 10;
+	return grid;
+}
+
+int getRightGrid()
+{
+	double right_volt = (float)5/(float)1024*(float)distance_right;
+	if(right_volt>1.9)
+		grid = 0;
+	  else if(right_volt>1.3)
+		grid = 1;
+	  else if(right_volt>1.1)
+		grid = 2;
+	  else if(right_volt>0.86)
+		grid = 3;
+	  else if(right_volt>0.73)
+		grid = 4;
+	  else
+		grid = 10;
+	return grid;
+}
+
+int getBackGrid()
+{
+	double back_volt = (float)5/(float)1024*(float)distance_back;
+	if(back_volt>1.9)
+		grid = 0;
+	  else if(back_volt>1.3)
+		grid = 1;
+	  else if(back_volt>1.1)
+		grid = 2;
+	  else if(back_volt>0.86)
+		grid = 3;
+	  else if(back_volt>0.73)
+		grid = 4;
+	  else
+		grid = 10;
+	return grid;
 }
