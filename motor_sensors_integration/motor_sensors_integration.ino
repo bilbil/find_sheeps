@@ -27,53 +27,48 @@ void startdelay()
 
 void loop()
 { 
-//  digitalWrite(led_pin, led);
-  
-//    mySensor.goStraightTile(5);
-//    mySensor.rotate180Right();
-//    mySensor.goStraightTile(5);
-    
+
+// //obstacle detection
 //    while(1)
-//    { 
-//      int g = 0;
+//    {    
+//      double b = 0;
+//      
+//      for(int h = 0; h < 10; h++)
+//      {
+//        int a;
+//        a = mySensor.getFrontGrid();
+//         b = b + (double) a;
+//      }
+//      
+//      b = round(b/10);
+//      
+//  //      Serial.println(b); 
+//  
+//      if(b>1)
+//      {
+//          mySensor.goStraightTile(1);    
+//      }
+//        delay(1000);
 //    }
-  while(1)
-  {    
-//    delay(3000);
-
-      mySensor.updateDistances();
-//      delay(500);
-//      Serial.print("front = " );          
     
-      test = (float)5/(float)1024*(float)mySensor.distance_front;
-      
-      if(test>1.9)
-        grid = 0;
-      else if(test>1.3)
-        grid = 1;
-      else if(test>0.83)
-        grid = 2;
-      else if(test>0.63)
-        grid = 3;
-      else if(test>0.54)
-        grid = 4;
-      else
-        grid = 10;
-//      Serial.println(test); 
-      
-      if(grid > 1)
-      {
-//        mySensor.test(1);
-          mySensor.goStraightTile(1);
-          delay(200);
-      }
-      else
-      {
-          mySensor.rotate90Left();
-          delay(200);
-      }
-
-//      Serial.println(grid); 
-  }
+//    mySensor.test(0);
+//manual hard code test starts here    
+    mySensor.goStraightTile(4);
+    mySensor.rotate90Left();
+    mySensor.goStraightTile(4);
+    mySensor.rotate90Left();
+    mySensor.goStraightTile(4);
+    mySensor.rotate90Left();
+    mySensor.goStraightTile(4);
+//    mySensor.goStraightTile(3);
+//    mySensor.rotate180Left();
+//    mySensor.goStraightTile(3);
+//    mySensor.goStraightTile(1);
+    
+    while(1)
+    { 
+       int  h= 0;
+    }
+//manual hard code test ends here 
 }
 

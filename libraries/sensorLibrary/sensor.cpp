@@ -13,14 +13,15 @@ motor myMotor;
 
 sensor::sensor()	//constructor
 {
-	// pinMode(GRIDSENS_BACK_RIGHT, INPUT);	//grid sensor pin out
-	// pinMode(GRIDSENS_BACK_LEFT, INPUT);
-	pinMode(GRIDSENS_FRONT_RIGHT_WIDE, INPUT);	//grid sensor pin out
-	pinMode(GRIDSENS_FRONT_LEFT_WIDE, INPUT);
+	pinMode(GRIDSENS_BACK_RIGHT, INPUT);	//grid sensor pin out
+	pinMode(GRIDSENS_BACK_LEFT, INPUT);
+	// pinMode(GRIDSENS_FRONT_RIGHT_WIDE, INPUT);	//grid sensor pin out
+	// pinMode(GRIDSENS_FRONT_LEFT_WIDE, INPUT);
 	pinMode(GRIDSENS_FRONT_RIGHT, INPUT);
 	pinMode(GRIDSENS_FRONT_LEFT, INPUT);
 	
 	myMotor = motor();	//setup motor settings
+
 }
 
 volatile int sensor::ACTION = STAY;
@@ -32,16 +33,13 @@ volatile int sensor::distance_left = 0;
 volatile int sensor::distance_right = 0;
 volatile int sensor::distance_back = 0;
 
+volatile int sensor::grid = 0;
+
+volatile int sensor::ERRORCOUNT = 0;
+
 void sensor::test(int val)
 {
-	if(val == 1)
-	{
-		motor::motorStart(true,90,90);
-	}
-	else
-	{
-		motor::motorStop();
-	}
+	motor::motorStart(true,70,50);
 }
 
 void sensor::goStraightTile(int val)
@@ -65,14 +63,12 @@ void sensor::goStraightTile(int val)
 void sensor::rotate180Left()
 {
 	rotate90Left();
-	delay(100);
 	rotate90Left();
 }
 
 void sensor::rotate180Right()
 {
 	rotate90Right();
-	delay(100);
 	rotate90Right();
 }
 
@@ -220,121 +216,153 @@ void sensor::rotate90Right()
 } */
 
 void sensor::process()
-{			  
-	// updateDistances();
+{		
+	// motor::motorStart(true,55,50);	  
+ 
+
+    bool frontLeft = getFrontLeftWhite();
+	bool frontRight = getFrontRightWhite();
+	bool backLeft = getBackLeftWhite();
+	bool backRight = getBackRightWhite();
 	
 	if(ACTION == STRAIGHT)	// guide robot straight
 	{		
-		  if (getFrontLeftWhite() == false && getFrontRightWhite() == false)
+		  if (frontLeft == true && frontRight == true)	// on white
 		  {
-				if(getFrontLeftWideWhite() == false && getFrontRightWideWhite() == false)	//on black of cross
+				ERRORCOUNT = 0;
+				
+				if(backLeft == false && backRight == false)
 				{
-					DEBOUNCE++;
-				}
-				myMotor.motorStart(true, 90,90);	
-		  }
-		  else if (getFrontLeftWhite() == true && getFrontRightWhite() == false)	//need to turn right
-		  {
-			  // myMotor.motorStart(true,65,0);
-			  myMotor.motorStartRotate(false,75);
-		  }
-		  else if (getFrontLeftWhite() == false && getFrontRightWhite() == true)	// need to turn left
-		  {
-			  // myMotor.motorStart(true,0,65);
-			  myMotor.motorStartRotate(true,75);
-		  }
-		  else	// both on white
-		  {
-				if(getFrontLeftWideWhite() == true && getFrontRightWideWhite() == true)	//going form black cross to past it
-				{
-					if(DEBOUNCE > 20)	//debounce grid sensor to get accurate crossing
+					if(DEBOUNCE > 1)	//debounce grid sensor to get accurate crossing
 					{
 						DEBOUNCE = 0;
 						GOGRIDCOUNT--;	//count on entering each tile cross
 						
 						if(GOGRIDCOUNT <= 0)	// when robot passes a defined number of tile crosses
 						{
-							myMotor.motorStop();
+							motor::motorStop();
 							ACTION = STAY;
 							// ACTION = BACKUP;
 						}
-						else if(GOGRIDCOUNT > 1)	// normal speed if there is more grid tile to go
+						else if(GOGRIDCOUNT < 3)	// when robot passes a defined number of tile crosses
 						{
-							myMotor.motorStart(true,90,90);
+							myMotor.motorStart(true, 45,45);
 						}
 						else
 						{
-							myMotor.motorStart(true,70,70);	//slow down robot on last grid cross encounter
+							myMotor.motorStart(true,70,70);
 						}
 					}
 					else
 					{
-						myMotor.motorStart(true,90,90);
+						if(GOGRIDCOUNT < 3)
+						{
+							myMotor.motorStart(true, 45,45);
+						}
+						else
+						{
+							myMotor.motorStart(true,70,70);
+						}
 					}
 				}
 				else
-				{
-					myMotor.motorStart(true,90,90);
+				{	
+					if(GOGRIDCOUNT < 3)
+					{
+						myMotor.motorStart(true, 45,45);
+					}
+					else	
+					{
+						myMotor.motorStart(true, 70,70);
+					}
 				}
 		  }
-	}
+		  else if (frontLeft == true && frontRight == false)	//need to turn right
+		  {
+			int temp = 45 + ERRORCOUNT;
+			if( temp > 60 )
+			{	
+				temp = 60;
+			}
+			  // myMotor.motorStart(true,65,0);
+			  myMotor.motorStartRotate(false,temp);
+			
+			ERRORCOUNT++;
+		  }
+		  else if (frontLeft == false && frontRight == true)	// need to turn left
+		  {
+			int temp = 45 + ERRORCOUNT;
+			if( temp > 60 )
+			{	
+				temp = 60;
+			}
+			  // myMotor.motorStart(true,0,65);
+			  myMotor.motorStartRotate(true,temp);
+			
+			ERRORCOUNT++;
+		  }
+		  else	// both on black
+		  {
+				// if(getFrontLeftWideWhite() == false && getFrontRightWideWhite() == false)	//on black of cross
+				// {
+					DEBOUNCE++;
+				// }
+				myMotor.motorStart(true, 45,45);	
+				ERRORCOUNT = 0;
+		  }
+	} 
 	else if(ACTION == TURNLEFT)
 	{
-		if(getFrontLeftWhite() == true)		
+		if(frontLeft == true)		
 		{
-			if(DEBOUNCE > 20)
+			if(DEBOUNCE > 10)
 			{
 				motor::motorStop();
 				ACTION = STAY;
+				// ACTION = ADJUST;
 			}
 			else
 			{
-				motor::motorStartRotate(true, 80);
+				motor::motorStartRotate(true, 53);
 				// motor::motorStart(true,0,65);
 			}
 		}
 		else
 		{
-			motor::motorStartRotate(true, 80);
+			motor::motorStartRotate(true, 53);
 			// motor::motorStart(true,0,65);
 			DEBOUNCE++;
 		}
-	}
-	else if(ACTION == TURNRIGHT)
+	} 
+    else if(ACTION == TURNRIGHT)
 	{
-		if(getFrontRightWhite() == true)		
+		if(frontRight == true)		
 		{
-			if(DEBOUNCE > 20)
+			if(DEBOUNCE > 10)
 			{
 				motor::motorStop();
 				ACTION = STAY;
+				// ACTION = ADJUST;
 			}
 			else
 			{
-				motor::motorStartRotate(false, 80);
+				motor::motorStartRotate(false, 53);
 				// motor::motorStart(true,65,0);
 			}
 		}
 		else
 		{
-			motor::motorStartRotate(false, 80);
+			motor::motorStartRotate(false, 53);
 			// motor::motorStart(true,65,0);
 			DEBOUNCE++;
 		}
-	}
+	} 
 	else if(ACTION == BACKUP)
 	{
-		if(getFrontLeftWhite() == false && getFrontRightWhite() == false)
+		if(backLeft == true && backRight == true)
 		{
-			if(getFrontLeftWideWhite() == false && getFrontRightWideWhite() == false)	//going form black cross to past it
-			{
-				motor::motorStop();
-				ACTION = STAY;
-			}
-			else
-			{
-				motor::motorStart(false, 40,40);
-			}
+			motor::motorStop();
+			ACTION = STAY;
 		}
 		else
 		{
@@ -344,7 +372,8 @@ void sensor::process()
 	else
 	{
 		motor::motorStop();
-	}
+		ACTION = STAY;
+	} 
 }
 
 boolean sensor::getFrontLeftWhite()
@@ -419,71 +448,87 @@ boolean sensor::getFrontRightWideWhite()
 	}
 }
 
-void sensor::updateDistances()
+int sensor::getFrontGrid()
 {
-	distance_front = analogRead(DISTANCESENS_FRONT); 
-	distance_left = analogRead(DISTANCESENS_LEFT); 
-	distance_right = analogRead(DISTANCESENS_RIGHT); 
-	distance_back = analogRead(DISTANCESENS_BACK);
-}
-
-int getFrontGrid()
-{
-	double front_volt = (float)5/(float)1024*(float)distance_front;
-	if(front_volt>1.9)
+	double front_volt=0;
+	for(int i=0;i<3;i++)
+	{
+		distance_front = analogRead(DISTANCESENS_FRONT); 
+		front_volt = (float)5/(float)1024*(float)distance_front+front_volt;
+	}
+	front_volt = front_volt/3;
+	if(front_volt>2.04)
 		grid = 0;
-	  else if(front_volt>1.3)
+	  else if(front_volt>1.32)
 		grid = 1;
-	  else if(front_volt>1.1)
+	  else if(front_volt>0.81)
 		grid = 2;
-	  else if(front_volt>0.86)
+	  else if(front_volt>0.57)
 		grid = 3;
-	  else if(front_volt>0.73)
+	  else if(front_volt>0.50)
 		grid = 4;
 	  else
 		grid = 10;
 	return grid;
 }
 
-int getLeftGrid()
+int sensor::getLeftGrid()
 {
-	double left_volt = (float)5/(float)1024*(float)distance_left;
-	if(left_volt>1.9)
+	double left_volt=0;
+	for(int i=0;i<3;i++)
+	{
+		distance_left = analogRead(DISTANCESENS_LEFT); 
+		left_volt = (float)5/(float)1024*(float)distance_left+left_volt;
+	}
+	left_volt = left_volt/3;
+	if(left_volt>2.00)
 		grid = 0;
-	  else if(left_volt>1.3)
+	  else if(left_volt>1.26)
 		grid = 1;
-	  else if(left_volt>1.1)
+	  else if(left_volt>0.76)
 		grid = 2;
-	  else if(left_volt>0.86)
+	  else if(left_volt>0.56)
 		grid = 3;
-	  else if(left_volt>0.73)
+	  else if(left_volt>0.50)
 		grid = 4;
 	  else
 		grid = 10;
 	return grid;
 }
 
-int getRightGrid()
+int sensor::getRightGrid()
 {
-	double right_volt = (float)5/(float)1024*(float)distance_right;
-	if(right_volt>1.9)
+	double right_volt=0;
+	for(int i=0;i<3;i++)
+	{
+		distance_right = analogRead(DISTANCESENS_RIGHT); 
+		right_volt = (float)5/(float)1024*(float)distance_right+right_volt;
+	}
+	right_volt = right_volt/3;
+	if(right_volt>2.09)
 		grid = 0;
-	  else if(right_volt>1.3)
+	  else if(right_volt>1.31)
 		grid = 1;
-	  else if(right_volt>1.1)
+	  else if(right_volt>0.83)
 		grid = 2;
-	  else if(right_volt>0.86)
+	  else if(right_volt>0.60)
 		grid = 3;
-	  else if(right_volt>0.73)
+	  else if(right_volt>0.50)
 		grid = 4;
 	  else
 		grid = 10;
 	return grid;
 }
 
-int getBackGrid()
+int sensor::getBackGrid()
 {
-	double back_volt = (float)5/(float)1024*(float)distance_back;
+	double back_volt=0;
+	for(int i=0;i<3;i++)
+	{
+		distance_back = analogRead(DISTANCESENS_BACK); 
+		back_volt = (float)5/(float)1024*(float)distance_back+back_volt;
+	}
+	back_volt = back_volt/3;
 	if(back_volt>1.9)
 		grid = 0;
 	  else if(back_volt>1.3)

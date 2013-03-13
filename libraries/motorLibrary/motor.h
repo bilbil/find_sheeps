@@ -34,6 +34,12 @@ OCR2B compare interrupt for PWM duty of BIN1, BIN2
 #define AIN2PIN 11
 #define BIN1PIN 12
 #define BIN2PIN 13
+
+#define MOTORFORWARD 0
+#define MOTORPIVOTLEFT 1
+#define MOTORPIVOTRIGHT 2
+#define MOTORSTOP 3
+#define MOTORBACKWARD 4
 	
 class motor
 {
@@ -44,14 +50,13 @@ class motor
 	static volatile boolean AIN2;	//left motor AIN2
 	static volatile boolean BIN1;	//right motor BIN1
 	static volatile boolean BIN2;	//right motor BIN2
+	
+	static volatile int MOTORACTION;
 	 
 	static volatile boolean RUNFOREVER;
 	 
 	static volatile int MOTORDUTYLEFT;      //motor PWM duty
 	static volatile int MOTORDUTYRIGHT;     //motor PWM duty
-	 
-	static volatile int MOTORDUTYLEFTSET;      //motor PWM duty
-	static volatile int MOTORDUTYRIGHTSET;      //motor PWM duty
 	 
 	static volatile int MOTORONDURATIONSET;  //motor PWM on duration
 	static volatile int MOTORONDURATION;  //motor PWM on duration
@@ -62,7 +67,6 @@ class motor
 	static int motorStart(boolean forward,int modulationLeft, int modulationRight);	//public function for moving indefinitely
     static void motorDutySet(int left, int right);	// function for PWM duty setpoint
     static void motorStop();	//public function for stopping the robot
-	static void motorDutyEase(int left, int right, float adjustFactor);	//function for PWM duty easing using duty setpoints
 	static void motorDir(int dir, int modulation);	// internal helper function for turning the robot
 	
 	static void compAInterrupt();

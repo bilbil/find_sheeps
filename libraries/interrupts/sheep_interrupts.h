@@ -20,9 +20,11 @@ ISR(TIMER2_OVF_vect)        	// interrupt service routine Timer 2 for motor cont
 {	
 
 	// sensor::updateDistances();
-	sensor::process();			//call grid sensor functions
-	
+
 	motor::overFlowInterrupt();	//call motor functions
+	
+	sensor::process();			//call grid sensor functions
 }
+
 
 #endif
