@@ -49,6 +49,8 @@ void setup() {
 
   //Tests if the correct x coordinate is returned
   //findLeftWall();
+  //printHomeCoordinates();
+  //printCurrentCoordinates();
 
   //Tests orientation: Face east, face west, face south
   //test_orientationChange();
@@ -381,3 +383,22 @@ void test_advance() {
   advance(4); //posx = 20, posy = 20
 }
 
+void printHomeCoordinates () {
+  Serial.println("Home:");
+  Serial.println("\t");
+  Serial.println("x:");
+  Serial.println(homex);
+  Serial.println("\t");
+  Serial.println("y:");
+  Serial.println(homey);
+}
+
+void printCurrentCoordinates () {
+  Serial.println("Current:");
+  Serial.println("\t");
+  Serial.println("x:");
+  Serial.println(posx);
+  Serial.println("\t");
+  Serial.println("y:");
+  Serial.println(posy);
+}
