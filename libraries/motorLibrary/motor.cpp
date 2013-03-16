@@ -505,21 +505,6 @@ void motor::overFlowInterrupt()
 	
 	OCR2B = motor::MOTORDUTYRIGHT*255/100;            // set compare registers to duty
 	 OCR2A = motor::MOTORDUTYLEFT*255/100;            // set compare registers to duty
-	 
-	// TCNT2 = 0;       // preload timer range 0 - 255 counting up
 }
-// ISR(TIMER2_COMPA_vect)          // timer compare interrupt service routine
-// {
-	// motor::compAInterrupt();
-// }
 
-// ISR(TIMER2_COMPB_vect)          // timer compare interrupt service routine
-// {
-    // motor::compBInterrupt();
-// }
-
-// ISR(TIMER2_OVF_vect)        // interrupt service routine Timer 2 for motor control
-// {
-	// motor::overFlowInterrupt();
-// }
 

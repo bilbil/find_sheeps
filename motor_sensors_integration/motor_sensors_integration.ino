@@ -7,7 +7,6 @@
 sensor mySensor; 
 
 boolean led = true;
-int led_pin = 8;
 int grid = 0;
 float test = 0;
   
@@ -50,16 +49,20 @@ void loop()
 //      }
 //        delay(1000);
 //    }
-    
+//    
 //    mySensor.test(0);
 //manual hard code test starts here    
-    mySensor.goStraightTile(4);
+    mySensor.goStraightTile(2);
     mySensor.rotate90Left();
-    mySensor.goStraightTile(4);
-    mySensor.rotate90Left();
-    mySensor.goStraightTile(4);
-    mySensor.rotate90Left();
-    mySensor.goStraightTile(4);
+    mySensor.goStraightTile(2);
+    mySensor.rotate90Right();
+//    mySensor.rotate90Right();
+//    mySensor.rotate90Left();
+//    mySensor.goStraightTile(4);
+//    mySensor.rotate90Left();
+//    mySensor.goStraightTile(4);
+//    mySensor.rotate90Left();
+//    mySensor.goStraightTile(4);
 //    mySensor.goStraightTile(3);
 //    mySensor.rotate180Left();
 //    mySensor.goStraightTile(3);

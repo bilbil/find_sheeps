@@ -39,7 +39,7 @@ volatile int sensor::ERRORCOUNT = 0;
 
 void sensor::test(int val)
 {
-	motor::motorStart(true,70,50);
+	motor::motorStart(true,45,45);
 }
 
 void sensor::goStraightTile(int val)
@@ -217,9 +217,9 @@ void sensor::rotate90Right()
 
 void sensor::process()
 {		
-	// motor::motorStart(true,55,50);	  
- 
 
+	// motor::motorStart(true,10,10);
+ 		  
     bool frontLeft = getFrontLeftWhite();
 	bool frontRight = getFrontRightWhite();
 	bool backLeft = getBackLeftWhite();
@@ -241,27 +241,27 @@ void sensor::process()
 						if(GOGRIDCOUNT <= 0)	// when robot passes a defined number of tile crosses
 						{
 							motor::motorStop();
-							ACTION = STAY;
-							// ACTION = BACKUP;
+							// ACTION = STAY;
+							ACTION = BACKUP;
 						}
 						else if(GOGRIDCOUNT < 3)	// when robot passes a defined number of tile crosses
 						{
-							myMotor.motorStart(true, 45,45);
+							myMotor.motorStart(true,40,40);
 						}
 						else
 						{
-							myMotor.motorStart(true,70,70);
+							myMotor.motorStart(true,40,40);
 						}
 					}
 					else
 					{
 						if(GOGRIDCOUNT < 3)
 						{
-							myMotor.motorStart(true, 45,45);
+							myMotor.motorStart(true, 40,40);
 						}
 						else
 						{
-							myMotor.motorStart(true,70,70);
+							myMotor.motorStart(true,40,40);
 						}
 					}
 				}
@@ -269,20 +269,20 @@ void sensor::process()
 				{	
 					if(GOGRIDCOUNT < 3)
 					{
-						myMotor.motorStart(true, 45,45);
+						myMotor.motorStart(true, 40,40);
 					}
 					else	
 					{
-						myMotor.motorStart(true, 70,70);
+						myMotor.motorStart(true, 40,40);
 					}
 				}
 		  }
 		  else if (frontLeft == true && frontRight == false)	//need to turn right
 		  {
-			int temp = 45 + ERRORCOUNT;
-			if( temp > 60 )
+			int temp = 25 + ERRORCOUNT;
+			if( temp > 40 )
 			{	
-				temp = 60;
+				temp = 40;
 			}
 			  // myMotor.motorStart(true,65,0);
 			  myMotor.motorStartRotate(false,temp);
@@ -291,10 +291,10 @@ void sensor::process()
 		  }
 		  else if (frontLeft == false && frontRight == true)	// need to turn left
 		  {
-			int temp = 45 + ERRORCOUNT;
-			if( temp > 60 )
+			int temp = 25 + ERRORCOUNT;
+			if( temp > 40 )
 			{	
-				temp = 60;
+				temp = 40;
 			}
 			  // myMotor.motorStart(true,0,65);
 			  myMotor.motorStartRotate(true,temp);
@@ -307,7 +307,7 @@ void sensor::process()
 				// {
 					DEBOUNCE++;
 				// }
-				myMotor.motorStart(true, 45,45);	
+				myMotor.motorStart(true, 40,40);	
 				ERRORCOUNT = 0;
 		  }
 	} 
@@ -323,13 +323,13 @@ void sensor::process()
 			}
 			else
 			{
-				motor::motorStartRotate(true, 53);
+				motor::motorStartRotate(true, 60);
 				// motor::motorStart(true,0,65);
 			}
 		}
 		else
 		{
-			motor::motorStartRotate(true, 53);
+			motor::motorStartRotate(true, 60);
 			// motor::motorStart(true,0,65);
 			DEBOUNCE++;
 		}
@@ -346,20 +346,20 @@ void sensor::process()
 			}
 			else
 			{
-				motor::motorStartRotate(false, 53);
+				motor::motorStartRotate(false, 60);
 				// motor::motorStart(true,65,0);
 			}
 		}
 		else
 		{
-			motor::motorStartRotate(false, 53);
+			motor::motorStartRotate(false, 60);
 			// motor::motorStart(true,65,0);
 			DEBOUNCE++;
 		}
 	} 
 	else if(ACTION == BACKUP)
 	{
-		if(backLeft == true && backRight == true)
+		if(backLeft == true || backRight == true)
 		{
 			motor::motorStop();
 			ACTION = STAY;
@@ -373,12 +373,12 @@ void sensor::process()
 	{
 		motor::motorStop();
 		ACTION = STAY;
-	} 
+	}   
 }
 
 boolean sensor::getFrontLeftWhite()
 {
-	if(digitalRead(GRIDSENS_FRONT_LEFT) == 0)
+	if(digitalRead(GRIDSENS_FRONT_LEFT) == 1)
 	{
 		return true;
 	}
@@ -390,7 +390,7 @@ boolean sensor::getFrontLeftWhite()
 
 boolean sensor::getFrontRightWhite()
 {
-	if(digitalRead(GRIDSENS_FRONT_RIGHT) == 0)
+	if(digitalRead(GRIDSENS_FRONT_RIGHT) == 1)
 	{
 		return true;
 	}
@@ -402,7 +402,7 @@ boolean sensor::getFrontRightWhite()
 
 boolean sensor::getBackLeftWhite()
 {
-	if(digitalRead(GRIDSENS_BACK_LEFT) == 0)
+	if(digitalRead(GRIDSENS_BACK_LEFT) == 1)
 	{
 		return true;
 	}
@@ -414,7 +414,7 @@ boolean sensor::getBackLeftWhite()
 
 boolean sensor::getBackRightWhite()
 {
-	if(digitalRead(GRIDSENS_BACK_RIGHT) == 0)
+	if(digitalRead(GRIDSENS_BACK_RIGHT) == 1)
 	{
 		return true;
 	}
@@ -426,7 +426,7 @@ boolean sensor::getBackRightWhite()
 
 boolean sensor::getFrontLeftWideWhite()
 {
-	if(digitalRead(GRIDSENS_FRONT_LEFT_WIDE) == 0)
+	if(digitalRead(GRIDSENS_FRONT_LEFT_WIDE) == 1)
 	{
 		return true;
 	}
@@ -438,7 +438,7 @@ boolean sensor::getFrontLeftWideWhite()
 
 boolean sensor::getFrontRightWideWhite()
 {
-	if(digitalRead(GRIDSENS_FRONT_RIGHT_WIDE) == 0)
+	if(digitalRead(GRIDSENS_FRONT_RIGHT_WIDE) == 1)
 	{
 		return true;
 	}
@@ -451,21 +451,21 @@ boolean sensor::getFrontRightWideWhite()
 int sensor::getFrontGrid()
 {
 	double front_volt=0;
-	for(int i=0;i<3;i++)
+	for(int i=0;i<10;i++)
 	{
 		distance_front = analogRead(DISTANCESENS_FRONT); 
 		front_volt = (float)5/(float)1024*(float)distance_front+front_volt;
 	}
-	front_volt = front_volt/3;
-	if(front_volt>2.04)
+	front_volt = front_volt/10;
+	if(front_volt>1.78)
 		grid = 0;
-	  else if(front_volt>1.32)
+	  else if(front_volt>1.37)
 		grid = 1;
-	  else if(front_volt>0.81)
+	  else if(front_volt>0.98)
 		grid = 2;
-	  else if(front_volt>0.57)
+	  else if(front_volt>0.68)
 		grid = 3;
-	  else if(front_volt>0.50)
+	  else if(front_volt>0.55)
 		grid = 4;
 	  else
 		grid = 10;
@@ -481,15 +481,15 @@ int sensor::getLeftGrid()
 		left_volt = (float)5/(float)1024*(float)distance_left+left_volt;
 	}
 	left_volt = left_volt/3;
-	if(left_volt>2.00)
+	if(left_volt>1.98)
 		grid = 0;
-	  else if(left_volt>1.26)
+	  else if(left_volt>0.71)
 		grid = 1;
-	  else if(left_volt>0.76)
+	  else if(left_volt>0.32)
 		grid = 2;
-	  else if(left_volt>0.56)
+	  else if(left_volt>1)
 		grid = 3;
-	  else if(left_volt>0.50)
+	  else if(left_volt>1)
 		grid = 4;
 	  else
 		grid = 10;
@@ -505,15 +505,15 @@ int sensor::getRightGrid()
 		right_volt = (float)5/(float)1024*(float)distance_right+right_volt;
 	}
 	right_volt = right_volt/3;
-	if(right_volt>2.09)
+	if(right_volt>1.90)
 		grid = 0;
-	  else if(right_volt>1.31)
+	  else if(right_volt>1.04)
 		grid = 1;
-	  else if(right_volt>0.83)
+	  else if(right_volt>0.65)
 		grid = 2;
-	  else if(right_volt>0.60)
+	  else if(right_volt>1)
 		grid = 3;
-	  else if(right_volt>0.50)
+	  else if(right_volt>1)
 		grid = 4;
 	  else
 		grid = 10;

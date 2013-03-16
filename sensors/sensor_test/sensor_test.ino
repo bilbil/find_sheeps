@@ -19,17 +19,20 @@ void setup()
    // initialize serial communications at 9600 bps:
    Serial.begin(9600); 
 }
-
+//
 void loop()
 { 
-
+//mySensor.rotate90Left();
     while(1)
-    {    
-      mySensor.getFrontGrid();
-      mySensor.getLeftGrid();
-      mySensor.getRightGrid();
-      Serial.println(mySensor.distance_right);
-      delay(250);
+    {
+      delay(200);
+//      if(mySensor.getFrontGrid()>1)
+//        mySensor.goStraightTile(1);
+//      else
+//        mySensor.rotate90Left();
+//      mySensor.getLeftGrid()
+//      mySensor.getRightGrid()
+      Serial.println(mySensor.getFrontGrid());
     }
     
     
