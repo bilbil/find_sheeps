@@ -24,25 +24,25 @@ float Beacon::getFrontDistance() {
 }
 
 int Beacon::getFrontBeacon() {
-    timeLow = pulseIn(frontDigital, LOW);   // Add Timeout
+    timeLow = pulseIn(frontDigital, LOW, 350);   // Add Timeout
     checkBeacon();
     return beacon;
 }
 
 int Beacon::getBackBeacon() {
-    timeLow = pulseIn(backDigital, LOW);   // Add Timeout
+    timeLow = pulseIn(backDigital, LOW, 350);   // Add Timeout
     checkBeacon();
     return beacon;
 }
 
 int Beacon::getRightBeacon() {
-    timeLow = pulseIn(rightDigital, LOW);   // Add Timeout
+    timeLow = pulseIn(rightDigital, LOW, 350);   // Add Timeout
     checkBeacon();
     return beacon;
 }
 
 int Beacon::getLeftBeacon() {
-    timeLow = pulseIn(leftDigital, LOW);   // Add Timeout
+    timeLow = pulseIn(leftDigital, LOW, 350);   // Add Timeout
     checkBeacon();
     return beacon;
 }
