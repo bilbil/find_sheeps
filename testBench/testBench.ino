@@ -4,6 +4,8 @@
 #include <beacon.h>
 
 Beacon beaconDriver;
+sensor drive;
+
 /*Beacon and distance readings; 
  First array notates the current direction; 
  Second array stores the sensor readings in the following order:
@@ -37,8 +39,6 @@ Forward facing direction of the robot
  */
 int currentDirection;
 
-sensor drive;
-
 void setup() {
   // put your setup code here, to run once:
   //We set the starting direction of the robot to 'North'; every change after this point will be the relative direction
@@ -56,6 +56,9 @@ void setup() {
 
   //Tests orientation: Face east, face west, face south
   //test_orientationChange();
+  
+  //Tests if the sensors are updated according correctly according to its direction
+  test_directionalUpdates();
 
   //Tests updating of coordinates, bot should move in a square, and end up at the origin
   test_advance();
@@ -70,7 +73,7 @@ void loop() {
   //for (int i = 0; i < 4; i++) {
   //  advance(2);
   //}
-  goHome();
+  //goHome();
 }
 
 void randomWalk() {
@@ -242,7 +245,6 @@ void turnLeft ()
   if (currentDirection == 1) {
     currentDirection = 4;
   }
-
   else {
     currentDirection --;
   }
@@ -254,7 +256,6 @@ void turnRight ()
   if (currentDirection == 4) {
     currentDirection = 1;
   }
-
   else {
     currentDirection ++;
   }
@@ -399,9 +400,41 @@ void test_advance() {
   posy = 20;
 
   advance(1); //posx = 20, posy = 21
+  printCurrentCoordinates();
+  delay(1000);
   advance(2); //posx = 21, posy = 21
+  printCurrentCoordinates();
+  delay(1000);
   advance(3); //posx = 21, posy = 20
+  printCurrentCoordinates();
+  delay(1000);
   advance(4); //posx = 20, posy = 20
+}
+
+void test_directionalUpdates() {
+  changeOrientation(2);
+  updateBeacon();
+  updateReadings();
+  printSensorReadings();
+  delay(3000);
+
+  changeOrientation(3);
+  updateBeacon();
+  updateReadings();
+  printSensorReadings();
+  delay(3000);
+
+  changeOrientation(4);
+  updateBeacon();
+  updateReadings();
+  printSensorReadings();
+  delay(3000);
+  
+  changeOrientation(1);
+  updateBeacon();
+  updateReadings();
+  printSensorReadings();
+  delay(3000);
 }
 
 void printHomeCoordinates () {
@@ -423,3 +456,13 @@ void printCurrentCoordinates () {
   Serial.println("y:");
   Serial.println(posy);
 }
+
+void printSensorReadings () {
+  for (int i = 0; i < 4; i++) {
+    Serial.println(beacon[currentDirection][i]);
+    Serial.println("\t");
+    Serial.println(distance[currentDirection][i]);
+    Serial.println("\n");
+  }
+}
+
