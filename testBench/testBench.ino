@@ -1,7 +1,9 @@
 #include <sheep_interrupts.h>
 #include <motor.h>
 #include <sensor.h>
+#include <beacon.h>
 
+Beacon beaconDriver;
 /*Beacon and distance readings; 
  First array notates the current direction; 
  Second array stores the sensor readings in the following order:
@@ -129,38 +131,54 @@ void updateReadings() {
     distance[currentDirection][1] = getDistanceRight();
     distance[currentDirection][2] = -1;
     distance[currentDirection][3] = getDistanceLeft();
-    beacon[currentDirection][0] = getBeaconFront();
-    beacon[currentDirection][1] = getBeaconRight();
-    beacon[currentDirection][2] = -1;
-    beacon[currentDirection][3] = getBeaconLeft();
     break;
   case 2:
     distance[currentDirection][0] = getDistanceLeft();
     distance[currentDirection][1] = getDistanceFront();
     distance[currentDirection][2] = getDistanceRight();
     distance[currentDirection][3] = -1;
-    beacon[currentDirection][0] = getBeaconLeft();
-    beacon[currentDirection][1] = getBeaconFront();
-    beacon[currentDirection][2] = getBeaconRight();
-    beacon[currentDirection][3] = -1;
     break;
   case 3:
     distance[currentDirection][0] = -1;
     distance[currentDirection][1] = getDistanceLeft();
     distance[currentDirection][2] = getDistanceFront();
     distance[currentDirection][3] = getDistanceRight();
-    beacon[currentDirection][0] = -1;
-    beacon[currentDirection][1] = getBeaconLeft();
-    beacon[currentDirection][2] = getBeaconFront();
-    beacon[currentDirection][3] = getBeaconRight();
     break;
   case 4:
     distance[currentDirection][0] = getDistanceRight();
     distance[currentDirection][1] = -1;
     distance[currentDirection][2] = getDistanceLeft();
     distance[currentDirection][3] = getDistanceFront();
+    break;
+  default:
+    break;
+  }
+}
+
+//Updates the sensors; Since the sensors on the robot is relative to static North, proper assignment of sensor readings is done to capture data in the 4 directions
+void updateBeacon() {
+  switch (currentDirection) {
+  case 1:
+    beacon[currentDirection][0] = getBeaconFront();
+    beacon[currentDirection][1] = getBeaconRight();
+    beacon[currentDirection][2] = getBeaconBack();
+    beacon[currentDirection][3] = getBeaconLeft();
+    break;
+  case 2:
+    beacon[currentDirection][0] = getBeaconLeft();
+    beacon[currentDirection][1] = getBeaconFront();
+    beacon[currentDirection][2] = getBeaconRight();
+    beacon[currentDirection][3] = getBeaconBack();
+    break;
+  case 3:
+    beacon[currentDirection][0] = getBeaconBack();
+    beacon[currentDirection][1] = getBeaconLeft();
+    beacon[currentDirection][2] = getBeaconFront();
+    beacon[currentDirection][3] = getBeaconRight();
+    break;
+  case 4:
     beacon[currentDirection][0] = getBeaconRight();
-    beacon[currentDirection][1] = -1;
+    beacon[currentDirection][1] = getBeaconBack();
     beacon[currentDirection][2] = getBeaconLeft();
     beacon[currentDirection][3] = getBeaconFront();
     break;
@@ -168,7 +186,6 @@ void updateReadings() {
     break;
   }
 }
-
 
 int getDistanceLeft() {
   return drive.getLeftGrid();
@@ -183,15 +200,19 @@ int getDistanceRight() {
 }
 
 int getBeaconLeft() {
-
+  return beaconDriver.getLeftBeacon();
 }
 
 int getBeaconFront() {
-
+  return beaconDriver.getFrontBeacon();
 }
 
 int getBeaconRight() {
+  return beaconDriver.getRightBeacon();
+}
 
+int getBeaconBack() {
+  return beaconDriver.getBackBeacon();
 }
 
 //Detects the presence of a beacon; returns the direction in which the beacon is being received
