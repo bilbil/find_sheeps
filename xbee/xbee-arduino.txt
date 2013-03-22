@@ -1,0 +1,58 @@
+long BaudRate = 4800;
+
+void setup()
+
+{
+  Serial.begin(BaudRate);
+
+  Serial.println("TIME");
+  
+  Serial.println("DISTANCE");
+  
+}
+
+
+
+void sendInfo()
+{
+  Serial.println(getTime());
+  
+  Serial.println(getDist());
+
+}
+
+
+void loop()
+
+{
+
+// sheep has to be connected to pin detection
+  sheep = none;
+  if(!atHome)
+  {
+  switch (sheep) {
+    case "none":
+      break;
+    case "Beatrice":
+      Serial.println("Beatrice");
+  
+      Serial.println("Beatrice");
+      sheep = none;
+      break;
+    case "Barclay":
+      Serial.println("Barclay");
+  
+      Serial.println("Barclay");
+      sheep = none;
+      break;
+  }
+  sendInfo()
+  delay(500);
+  }
+  else
+  {
+  Serial.println("home");
+
+  }
+
+}

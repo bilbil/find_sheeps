@@ -1,0 +1,46 @@
+import time
+import serial
+import xlwt
+
+# configure the serial connections (the parameters differs on the device you are connecting to)
+
+f = open("Data.txt",'w')
+
+xbee = serial.Serial(
+    port='COM7',
+    baudrate=4800,
+    parity=serial.PARITY_NONE,
+    stopbits=serial.STOPBITS_ONE,
+    bytesize=serial.EIGHTBITS
+)
+
+text = xbee.readline()
+while (text != "home" ):
+    text = xbee.readline()
+    f.write(text)
+    print text
+
+xbee.close()
+f.close()
+
+# Create workbook and worksheet
+wbk = xlwt.Workbook()
+sheet = wbk.add_sheet('Farmer_data')
+
+row = 0  # row counter
+f = open('Data.txt')
+for line in f:
+    # separate fields by commas
+    L = line.rstrip().split(',')
+
+    # Elements to variables for clarity
+    time = L[0]
+    dist = L[1]
+
+    # Write the data
+    sheet.write(row,0,time)
+    sheet.write(row,1,distance)
+
+    row += 1
+
+wbk.save('Farmer_data.xls')
