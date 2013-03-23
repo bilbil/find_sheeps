@@ -1,0 +1,24 @@
+const int buttonPin = _____;
+int buttonState = 0;
+int numSheep = 0;
+char sheep[] = "none";
+
+void setup() {
+  pinMode(buttonPin, INPUT);    
+}
+
+void loop(){
+  buttonState = digitalRead(buttonPin);
+
+
+  if (buttonState == HIGH) {
+    numSheep++;
+    switch (numSheep) {
+      case 1:
+        sheep = "Beatrice"
+        break;
+      case 2:
+        sheep = "Barclay"
+        break;
+  }
+}
