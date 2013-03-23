@@ -25,7 +25,12 @@
 #define DISTANCESENS_LEFT	A1
 #define DISTANCESENS_RIGHT	A2
 #define DISTANCESENS_BACK	A3
-	
+
+#define SPEED_HIGH_STRAIGHT 50
+#define SPEED_HIGH_TURN	 65
+#define SPEED_LOW_STRAIGHT 40
+#define SPEED_LOW_TURN 40	
+
 class sensor
 { 
   public:
@@ -38,9 +43,13 @@ class sensor
 	static void rotate180Left();
 	
 	static int DEBOUNCE;
+	static int DEBOUNCE2;
 	volatile static int ACTION;				//state of the robot
 	volatile static int GOGRIDCOUNT; 		//user specified tile count
 	volatile static int ERRORCOUNT;
+	
+	static int SPEED_STRAIGHT;
+	static int SPEED_TURN;
 	
 	static void process();
 	static boolean getFrontLeftWhite();
@@ -60,6 +69,15 @@ class sensor
 	volatile static int grid;
 	
 	static void test(int val);
+	static int getFrontTest();
+	
+	static bool moveCenter(bool right);
+	volatile static bool frontLeft;
+	volatile static bool frontRight;
+	volatile static bool backLeft;
+	volatile static bool backRight;
+	
+	static void setSpeedHigh(bool val);
 	
   private:
  

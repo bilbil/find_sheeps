@@ -9,6 +9,9 @@ sensor mySensor;
 boolean led = true;
 int grid = 0;
 float test = 0;
+int front = 0;
+int left = 0;
+int right = 0;
   
 void setup()
 {
@@ -16,7 +19,7 @@ void setup()
   mySensor = sensor();  // setup grid sensor settings
    
    // initialize serial communications at 9600 bps:
-//   Serial.begin(9600); 
+   Serial.begin(4800); 
 }
 
 void startdelay()
@@ -51,11 +54,65 @@ void loop()
 //    }
 //    
 //    mySensor.test(0);
-//manual hard code test starts here    
-    mySensor.goStraightTile(2);
-    mySensor.rotate90Left();
-    mySensor.goStraightTile(2);
-    mySensor.rotate90Right();
+//manual hard code test starts here   
+      
+      char incomingByte;
+      
+      while(1)
+      { 
+//          int serialAvailable = Serial.available();
+//          if (serialAvailable > 0) 
+//          {
+//                  // read the incoming byte:
+//                  incomingByte = Serial.read();
+//                  
+//                  if(incomingByte == 'w')
+//                  {
+//                      mySensor.goStraightTile(1);
+//                
+//                  }
+//                  else if(incomingByte == 'a')
+//                  {
+//                      mySensor.rotate90Left();
+//                  }
+//                  else if(incomingByte == 'd')
+//                  {
+//                      mySensor.rotate90Right();
+//                  }
+//                  else if(incomingByte == 'o')
+//                  {
+//                      mySensor.setSpeedHigh(true);
+//                  }
+//                  else if(incomingByte == 'l')
+//                  {
+//                      mySensor.setSpeedHigh(false);
+//                  }
+//          }      
+          
+          front = mySensor.getFrontGrid();
+          left = mySensor.getLeftGrid();
+          right = mySensor.getRightGrid();
+          
+          Serial.println(front);
+          Serial.println(left);
+          Serial.println(right);
+          
+          
+      }
+//      while(1)
+//      { 
+//          int obstacle = mySensor.getFrontTest();
+//          
+//          if(obstacle > 350)
+//          {
+//             mySensor.rotate90Left();
+//          }
+//          delay(300);
+//      }
+//    mySensor.goStraightTile(2);
+//    mySensor.rotate90Left();
+//    mySensor.goStraightTile(2);
+//    mySensor.rotate90Right();
 //    mySensor.rotate90Right();
 //    mySensor.rotate90Left();
 //    mySensor.goStraightTile(4);
