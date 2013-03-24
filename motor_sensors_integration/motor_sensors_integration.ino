@@ -12,6 +12,7 @@ float test = 0;
 int front = 0;
 int left = 0;
 int right = 0;
+char incomingByte;
   
 void setup()
 {
@@ -56,38 +57,38 @@ void loop()
 //    mySensor.test(0);
 //manual hard code test starts here   
       
-      char incomingByte;
+
       
       while(1)
       { 
-//          int serialAvailable = Serial.available();
-//          if (serialAvailable > 0) 
-//          {
-//                  // read the incoming byte:
-//                  incomingByte = Serial.read();
-//                  
-//                  if(incomingByte == 'w')
-//                  {
-//                      mySensor.goStraightTile(1);
-//                
-//                  }
-//                  else if(incomingByte == 'a')
-//                  {
-//                      mySensor.rotate90Left();
-//                  }
-//                  else if(incomingByte == 'd')
-//                  {
-//                      mySensor.rotate90Right();
-//                  }
-//                  else if(incomingByte == 'o')
-//                  {
-//                      mySensor.setSpeedHigh(true);
-//                  }
-//                  else if(incomingByte == 'l')
-//                  {
-//                      mySensor.setSpeedHigh(false);
-//                  }
-//          }      
+          int serialAvailable = Serial.available();
+          if (serialAvailable > 0) 
+          {
+                  // read the incoming byte:
+                  incomingByte = Serial.read();
+                  
+                  if(incomingByte == 'w')
+                  {
+                      mySensor.goStraightTile(1);
+                
+                  }
+                  else if(incomingByte == 'a')
+                  {
+                      mySensor.rotate90Left();
+                  }
+                  else if(incomingByte == 'd')
+                  {
+                      mySensor.rotate90Right();
+                  }
+                  else if(incomingByte == 'o')
+                  {
+                      mySensor.setSpeedHigh(true);
+                  }
+                  else if(incomingByte == 'l')
+                  {
+                      mySensor.setSpeedHigh(false);
+                  }
+          }      
           
           front = mySensor.getFrontGrid();
           left = mySensor.getLeftGrid();
@@ -97,7 +98,7 @@ void loop()
           Serial.println(left);
           Serial.println(right);
           
-          
+          delay(500);
       }
 //      while(1)
 //      { 
