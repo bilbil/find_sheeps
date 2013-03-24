@@ -48,7 +48,7 @@ int Beacon::getLeftBeacon() {
 }
 
 void Beacon::checkBeacon() {
-    if (timeLow > 220 && timeLow < 300) {
+    if (timeLow > 220 && timeLow < 350) {
         beacon = 1;
     }
     else if (timeLow > 98 && timeLow < 100) {
