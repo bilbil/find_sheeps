@@ -1,6 +1,12 @@
 #include <sheep_interrupts.h>
 #include <motor.h>
 #include <sensor.h>
+#include <beacon.h>
+
+Beacon beaconDriver;
+sensor drive;
+
+long BaudRate = 4800;
 
 /*Beacon and distance readings; 
  First array notates the current direction; 
@@ -35,21 +41,25 @@ Forward facing direction of the robot
  */
 int currentDirection;
 
-sensor drive;
-
 void setup() {
+  Serial.begin(BaudRate);
+
+  // put your setup code here, to run once:
   //We set the starting direction of the robot to 'North'; every change after this point will be the relative direction
   currentDirection = 1;
   section = 1;
   //Variable declaration(s)
   drive = sensor();
   sheep = 0;
+  delay(2000);
   findInitialPosition();
 }
 
 void loop() {
-  // put your main code here, to run repeatedly: 
   randomWalk();
+  for (int i = 0; i < 4; i++) {
+    advance(2);
+  }
   goHome();
 }
 
@@ -109,38 +119,54 @@ void updateReadings() {
   case 1:
     distance[currentDirection][0] = getDistanceFront();
     distance[currentDirection][1] = getDistanceRight();
-    distance[currentDirection][2] = getDistanceBack();
+    distance[currentDirection][2] = -1;
     distance[currentDirection][3] = getDistanceLeft();
+    break;
+  case 2:
+    distance[currentDirection][0] = getDistanceLeft();
+    distance[currentDirection][1] = getDistanceFront();
+    distance[currentDirection][2] = getDistanceRight();
+    distance[currentDirection][3] = -1;
+    break;
+  case 3:
+    distance[currentDirection][0] = -1;
+    distance[currentDirection][1] = getDistanceLeft();
+    distance[currentDirection][2] = getDistanceFront();
+    distance[currentDirection][3] = getDistanceRight();
+    break;
+  case 4:
+    distance[currentDirection][0] = getDistanceRight();
+    distance[currentDirection][1] = -1;
+    distance[currentDirection][2] = getDistanceLeft();
+    distance[currentDirection][3] = getDistanceFront();
+    break;
+  default:
+    break;
+  }
+}
+
+//Updates the sensors; Since the sensors on the robot is relative to static North, proper assignment of sensor readings is done to capture data in the 4 directions
+void updateBeacon() {
+  switch (currentDirection) {
+  case 1:
     beacon[currentDirection][0] = getBeaconFront();
     beacon[currentDirection][1] = getBeaconRight();
     beacon[currentDirection][2] = getBeaconBack();
     beacon[currentDirection][3] = getBeaconLeft();
     break;
   case 2:
-    distance[currentDirection][0] = getDistanceLeft();
-    distance[currentDirection][1] = getDistanceFront();
-    distance[currentDirection][2] = getDistanceRight();
-    distance[currentDirection][3] = getDistanceBack();
     beacon[currentDirection][0] = getBeaconLeft();
     beacon[currentDirection][1] = getBeaconFront();
     beacon[currentDirection][2] = getBeaconRight();
     beacon[currentDirection][3] = getBeaconBack();
     break;
   case 3:
-    distance[currentDirection][0] = getDistanceBack();
-    distance[currentDirection][1] = getDistanceLeft();
-    distance[currentDirection][2] = getDistanceFront();
-    distance[currentDirection][3] = getDistanceRight();
     beacon[currentDirection][0] = getBeaconBack();
     beacon[currentDirection][1] = getBeaconLeft();
     beacon[currentDirection][2] = getBeaconFront();
     beacon[currentDirection][3] = getBeaconRight();
     break;
   case 4:
-    distance[currentDirection][0] = getDistanceRight();
-    distance[currentDirection][1] = getDistanceBack();
-    distance[currentDirection][2] = getDistanceLeft();
-    distance[currentDirection][3] = getDistanceFront();
     beacon[currentDirection][0] = getBeaconRight();
     beacon[currentDirection][1] = getBeaconBack();
     beacon[currentDirection][2] = getBeaconLeft();
@@ -151,37 +177,32 @@ void updateReadings() {
   }
 }
 
-
 int getDistanceLeft() {
-
+  return drive.getLeftGrid();
 }
 
 int getDistanceFront() {
-
+  return drive.getFrontGrid();
 }
 
 int getDistanceRight() {
-
-}
-
-int getDistanceBack () {
-
+  return drive.getRightGrid();
 }
 
 int getBeaconLeft() {
-
+  return beaconDriver.getLeftBeacon();
 }
 
 int getBeaconFront() {
-
+  return beaconDriver.getFrontBeacon();
 }
 
 int getBeaconRight() {
-
+  return beaconDriver.getRightBeacon();
 }
 
-int getBeaconBack () {
-
+int getBeaconBack() {
+  return beaconDriver.getBackBeacon();
 }
 
 //Detects the presence of a beacon; returns the direction in which the beacon is being received
@@ -211,7 +232,6 @@ void turnLeft ()
   if (currentDirection == 1) {
     currentDirection = 4;
   }
-
   else {
     currentDirection --;
   }
@@ -223,7 +243,6 @@ void turnRight ()
   if (currentDirection == 4) {
     currentDirection = 1;
   }
-
   else {
     currentDirection ++;
   }
@@ -251,24 +270,8 @@ void moveForward () {
 }
 
 void uTurn () {
-  switch (currentDirection)
-  {
-  case 1:
-    currentDirection = 3;
-    break;
-  case 2:
-    currentDirection = 4;
-    break;
-  case 3:
-    currentDirection = 1;
-    break;
-  case 4:
-    currentDirection = 2;
-    break;
-  default:
-    break;
-  }
-  drive.rotate180Right();
+  drive.rotate90Right();
+  drive.rotate90Right();
 }
 
 //Single move function
@@ -277,6 +280,10 @@ void advance (int targetDirection) {
     changeOrientation(targetDirection);
   }
   moveForward();
+  Serial.println("Current");
+  Serial.println(posx);
+  Serial.println(posy);
+  Serial.println("\n");
 }
 
 //Rotates the robot to specified orientation
@@ -290,15 +297,14 @@ void changeOrientation (int targetDirection) {
   if (plus == 0) {
     plus = 4;
   }
-
   if (plus == targetDirection) {
-    turnRight;
+    turnRight();
   }
   else if (minus == targetDirection) {
-    turnLeft;
+    turnLeft();
   }
   else {
-    uTurn;
+    uTurn();
   }
 }
 
@@ -324,13 +330,19 @@ void findInitialPosition() {
   else { 
     findLeftWall(); 
   }
+  Serial.println("Home:");
+  Serial.println(homex);
+  Serial.println(homey);
+  Serial.println("\n");
 }
 
 void findLeftWall() {
   int offset = 0;
   turnLeft();
-  while (getDistanceFront() == -1) {
+  Serial.println(currentDirection);
+  while (getDistanceFront() > 1) {
     moveForward();
+    
     offset++;
   }
   //Reads initial coordinates
@@ -351,12 +363,53 @@ void goHome() {
     else if (dx < 0) {
       advance (4);
     }
-    else if (dx = 0) {
-      while (posy > 1) {
-        advance (3);
-      }
-      return;
-    }
   }
+  while(posy > homey)
+  {
+    advance(3);
+  }
+ return; 
 }
+
+void printHomeCoordinates () {
+  Serial.println("Home:");
+  Serial.println("\t");
+  Serial.println("x:");
+  Serial.println(homex);
+  Serial.println("\t");
+  Serial.println("y:");
+  Serial.println(homey);
+}
+
+void printCurrentCoordinates () {
+  Serial.println("Current:");
+  Serial.println("\t");
+  Serial.println("x:");
+  Serial.println(posx);
+  Serial.println("\t");
+  Serial.println("y:");
+  Serial.println(posy);
+  Serial.println("Direction");
+  Serial.println(currentDirection);
+}
+
+void printSensorReadings () {
+  Serial.println("North reading");
+  Serial.println(distance[currentDirection][0]);
+  Serial.println("\n");
+
+  Serial.println("East reading");
+  Serial.println(distance[currentDirection][1]);
+  Serial.println("\n");
+
+  Serial.println("South reading");
+  Serial.println(distance[currentDirection][2]);
+  Serial.println("\n");
+
+  Serial.println("West reading");
+  Serial.println(distance[currentDirection][3]);
+  Serial.println("\n");
+}
+
+
 
