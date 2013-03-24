@@ -256,6 +256,8 @@ int getBeaconBack() {
 int detectBeacon() {
   for(int i = 0; i < 4; i++) {
     if (beacon[currentDirection][i] > 0) {
+      Serial.print("Debug: Beacon detected in direction ");
+      Serial.println(i);
       return i;
     }
   }
@@ -377,10 +379,9 @@ void findInitialPosition() {
   else { 
     findLeftWall(); 
   }
-  Serial.println("Home:");
-  Serial.println(homex);
+  Serial.print("Home:");
+  Serial.print(homex);
   Serial.println(homey);
-  Serial.println("\n");
 }
 
 void findLeftWall() {
@@ -495,43 +496,39 @@ void test_directionalUpdates() {
 }
 
 void printHomeCoordinates () {
-  Serial.println("Home:");
-  Serial.println("\t");
-  Serial.println("x:");
-  Serial.println(homex);
-  Serial.println("\t");
-  Serial.println("y:");
+  Serial.print("Home:");
+  Serial.print("\t");
+  Serial.print("x:");
+  Serial.print(homex);
+  Serial.print("\t");
+  Serial.print("y:");
   Serial.println(homey);
 }
 
 void printCurrentCoordinates () {
-  Serial.println("Current:");
-  Serial.println("\t");
-  Serial.println("x:");
-  Serial.println(posx);
-  Serial.println("\t");
-  Serial.println("y:");
-  Serial.println(posy);
-  Serial.println("Direction");
+  Serial.print("Current:");
+  Serial.print("\t");
+  Serial.print("x:");
+  Serial.print(posx);
+  Serial.print("\t");
+  Serial.print("y:");
+  Serial.print(posy);
+  Serial.print("Direction");
   Serial.println(currentDirection);
 }
 
 void printSensorReadings () {
-  Serial.println("North reading");
+  Serial.print("North reading");
   Serial.println(distance[currentDirection][0]);
-  Serial.println("\n");
 
-  Serial.println("East reading");
+  Serial.print("East reading");
   Serial.println(distance[currentDirection][1]);
-  Serial.println("\n");
 
-  Serial.println("South reading");
+  Serial.print("South reading");
   Serial.println(distance[currentDirection][2]);
-  Serial.println("\n");
 
-  Serial.println("West reading");
+  Serial.print("West reading");
   Serial.println(distance[currentDirection][3]);
-  Serial.println("\n");
 }
 
 
