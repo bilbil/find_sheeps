@@ -43,9 +43,10 @@ int currentDirection;
 
 void setup() {
   Serial.begin(BaudRate);
+
   // put your setup code here, to run once:
   //We set the starting direction of the robot to 'North'; every change after this point will be the relative direction
-  currentDirection = 2;
+  currentDirection = 1;
   section = 1;
   //Variable declaration(s)
   drive = sensor();
@@ -54,13 +55,13 @@ void setup() {
   //findInitialPosition();
 
   //Tests if the correct x coordinate is returned
-  //findLeftWall();
-  //printHomeCoordinates();
-  //printCurrentCoordinates();
+  findLeftWall();
+  printHomeCoordinates();
+  printCurrentCoordinates();
 
   //Tests orientation: Face east, face west, face south
   //test_orientationChange();
-  
+
   //Tests if the sensors are updated according correctly according to its direction
   //test_directionalUpdates();
 
@@ -78,8 +79,35 @@ void loop() {
   //  advance(2);
   //}
   //goHome();
-  updateReadings();
-  printSensorReadings();
+  char incomingByte;
+
+  int serialAvailable = Serial.available();
+  if (serialAvailable > 0) 
+  {
+    // read the incoming byte:
+    incomingByte = Serial.read();
+
+    if(incomingByte == 'w')
+    {
+      advance(1);
+    }
+    else if(incomingByte == 'a')
+    {
+      advance(4);
+    }
+    else if(incomingByte == 'd')
+    {
+      advance(2);
+    }
+    else if (incomingByte == 's')
+    {
+      advance(4);
+    }
+    else if(incomingByte == 'h')
+    {
+      goHome();
+    }
+  } 
 }
 
 void randomWalk() {
@@ -358,8 +386,10 @@ void findInitialPosition() {
 void findLeftWall() {
   int offset = 0;
   turnLeft();
+  Serial.println(currentDirection);
   while (getDistanceFront() > 1) {
     moveForward();
+    
     offset++;
   }
   //Reads initial coordinates
@@ -380,13 +410,18 @@ void goHome() {
     else if (dx < 0) {
       advance (4);
     }
-    else if (dx = 0) {
-      while (posy > 1) {
-        advance (3);
-      }
-      return;
-    }
+//    else if (dx = 0) {
+//      while (posy > 1) {
+//        advance (3);
+//      }
+//      return;
+//    }
   }
+  while(posy > homey)
+  {
+    advance(3);
+  }
+ return; 
 }
 
 void test_orientationChange () {
@@ -450,7 +485,7 @@ void test_directionalUpdates() {
   updateReadings();
   printSensorReadings();
   delay(3000);
-  
+
   Serial.println("Facing north");
   changeOrientation(1);
   //updateBeacon();
@@ -477,23 +512,27 @@ void printCurrentCoordinates () {
   Serial.println("\t");
   Serial.println("y:");
   Serial.println(posy);
+  Serial.println("Direction");
+  Serial.println(currentDirection);
 }
 
 void printSensorReadings () {
   Serial.println("North reading");
   Serial.println(distance[currentDirection][0]);
   Serial.println("\n");
-  
+
   Serial.println("East reading");
   Serial.println(distance[currentDirection][1]);
   Serial.println("\n");
-  
+
   Serial.println("South reading");
   Serial.println(distance[currentDirection][2]);
   Serial.println("\n");
-  
+
   Serial.println("West reading");
   Serial.println(distance[currentDirection][3]);
   Serial.println("\n");
 }
+
+
 
