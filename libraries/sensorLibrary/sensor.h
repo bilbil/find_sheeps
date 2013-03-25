@@ -20,16 +20,18 @@
 #define STRAIGHT 3
 #define BACKUP 4
 #define ADJUST 5
+#define BACKUP_CHECK 6
 	
 #define DISTANCESENS_FRONT	A0
 #define DISTANCESENS_LEFT	A1
 #define DISTANCESENS_RIGHT	A2
 #define DISTANCESENS_BACK	A3
 
-#define SPEED_HIGH_STRAIGHT 50
-#define SPEED_HIGH_TURN	 65
-#define SPEED_LOW_STRAIGHT 40
-#define SPEED_LOW_TURN 40	
+#define SPEED_HIGH_STRAIGHT 60
+#define SPEED_HIGH_TURN	 67
+#define SPEED_LOW_STRAIGHT 60
+#define SPEED_LOW_TURN 60	
+#define SPEED_SLOW_STOP	 62
 
 class sensor
 { 
@@ -50,6 +52,8 @@ class sensor
 	
 	static int SPEED_STRAIGHT;
 	static int SPEED_TURN;
+	
+	static bool startOnWhite;
 	
 	static void process();
 	static boolean getFrontLeftWhite();
