@@ -18,9 +18,12 @@ sensor::sensor()	//constructor
 	pinMode(GRIDSENS_FRONT_RIGHT, INPUT);
 	pinMode(GRIDSENS_FRONT_LEFT, INPUT);
 
+	sensor::sensorEnable(false);
 	myMotor = motor();	//setup motor settings
 	
 	sensor::ACTION = STAY;
+	
+	sensor::sensorEnable(true);
 }
 
 volatile int sensor::ACTION = STAY;
@@ -41,15 +44,59 @@ volatile int sensor::grid = 0;
 volatile int sensor::ERRORCOUNT = 0;
 
 bool sensor::startOnWhite = false;
+bool sensor::turnStartOnWhite = false;
+int sensor::turnSensorStartCondition = TURN_NOT_INIT;
 
 volatile bool sensor::frontLeft = true;
 volatile bool sensor::frontRight = true;
 volatile bool sensor::backLeft = true;
 volatile bool sensor::backRight = true;
 
+void sensor::sensorEnable(bool val)
+{
+	if(val == true)	//turn interrupts on
+	{
+		noInterrupts();
+		int temp =  0b00000000;
+		temp |= (1 << OCIE2A);
+		temp |= (1 << OCIE2B);
+		temp |= (1 << TOIE2);
+		TIMSK2 |= temp;
+		interrupts();
+	}
+	else	//turn interrupts off
+	{
+		noInterrupts();
+		int temp =  0b11111111;
+		temp &= ~(1 << OCIE2A);
+		temp &= ~(1 << OCIE2B);
+		temp &= ~(1 << TOIE2);
+		TIMSK2 &= temp;
+		interrupts();
+	}
+}
+
 void sensor::test(int val)
 {
 	motor::motorStart(true,45,45);
+}
+
+void sensor::adjust()
+{
+	int currentAction;
+	do
+    {   
+		currentAction = ACTION;
+    }while(currentAction != STAY);
+	
+	startOnWhite = false;
+	ACTION = ADJUST;
+	DEBOUNCE = 0;
+	
+	do
+    {   
+		currentAction = ACTION;
+    }while(currentAction != STAY);
 }
 
 void sensor::goStraightTile(int val)
@@ -91,6 +138,9 @@ void sensor::rotate90Left()
 		currentAction = ACTION;
     }while(ACTION != STAY);
 	
+	startOnWhite = false;
+	turnSensorStartCondition = TURN_NOT_INIT;
+	
 	ACTION = TURNLEFT;
 	DEBOUNCE = 0;
 	
@@ -118,12 +168,17 @@ void sensor::rotate90Right()
 }
 
 void sensor::process()
-{		
- 		  
-    frontLeft = getFrontLeftWhite();
-	frontRight = getFrontRightWhite();
-	backLeft = getBackLeftWhite();
-	backRight = getBackRightWhite();
+{			  
+    // frontLeft = getFrontLeftWhite();
+	// frontRight = getFrontRightWhite();
+	// backLeft = getBackLeftWhite();
+	// backRight = getBackRightWhite();
+	
+	//faster read of digital ports for reflectance sensors
+	frontLeft = (PIND & (1<<GRIDSENS_FRONT_LEFT)); 
+	frontRight = (PIND & (1<<GRIDSENS_FRONT_RIGHT)); 
+	backLeft = (PIND & (1<<GRIDSENS_BACK_LEFT)); 
+	backRight = (PIND & (1<<GRIDSENS_BACK_RIGHT)); 
 	
 	if(ACTION == STRAIGHT)	// guide robot straight
 	{		
@@ -131,42 +186,6 @@ void sensor::process()
 		  {
 				startOnWhite = true;
 				ERRORCOUNT = 0;
-				
-				//test start
-				// if(DEBOUNCE > 1)	//debounce grid sensor to get accurate crossing
-				// {
-					// DEBOUNCE = 0;
-					// GOGRIDCOUNT--;	//count on entering each tile cross
-					
-					// if(GOGRIDCOUNT <= 0)	// when robot passes a defined number of tile crosses
-					// {
-						// motor::motorStop();
-						// ACTION = ADJUST;
-						// ACTION = BACKUP_CHECK;
-						
-					// }
-					// else if(GOGRIDCOUNT < 2)	// when robot passes a defined number of tile crosses
-					// {
-						// myMotor.motorStart(true,SPEED_STRAIGHT,SPEED_STRAIGHT);
-					// }
-					// else
-					// {
-						// myMotor.motorStart(true,SPEED_STRAIGHT,SPEED_STRAIGHT);
-					// }
-				// }
-				// else
-				// {
-					// if(GOGRIDCOUNT < 2)
-					// {
-						// myMotor.motorStart(true, SPEED_STRAIGHT,SPEED_STRAIGHT);
-					// }
-					// else
-					// {
-						// myMotor.motorStart(true,SPEED_STRAIGHT,SPEED_STRAIGHT);
-					// }
-				// }
-		
-				//end test
 				
 			    if(backLeft == false && backRight == false)
 				{
@@ -219,7 +238,7 @@ void sensor::process()
 		  }
 		  else if (frontLeft == true && frontRight == false)	//need to turn right
 		  {
-			int temp = 38 + ERRORCOUNT;
+			int temp = SPEED_LINE_FOLLOW + ERRORCOUNT;
 			if( temp > SPEED_STRAIGHT )
 			{	
 				temp = SPEED_STRAIGHT;
@@ -230,7 +249,7 @@ void sensor::process()
 		  }
 		  else if (frontLeft == false && frontRight == true)	// need to turn left
 		  {
-			int temp = 38 + ERRORCOUNT;
+			int temp = SPEED_LINE_FOLLOW + ERRORCOUNT;
 			if( temp > SPEED_STRAIGHT )
 			{	
 				temp = SPEED_STRAIGHT;
@@ -252,149 +271,218 @@ void sensor::process()
 	} 
 	else if(ACTION == TURNLEFT)
 	{
-		if(frontLeft == true || frontRight == true || backLeft == true || backRight == true)		
+		if(turnSensorStartCondition == TURN_NOT_INIT)
 		{
-			if(DEBOUNCE > 2)
+			if(frontLeft == true || frontRight == true)		
 			{
-				// motor::motorStop();
-				// ACTION = STAY;
-				DEBOUNCE2 = 0;
-				ACTION = ADJUST;
-				return;
+				turnSensorStartCondition = TURN_FRONT_ON_WHITE;
+			}
+			else
+			{
+				turnSensorStartCondition = TURN_BACK_ON_WHITE;
+			}
+		}
+		
+		if(turnSensorStartCondition == TURN_FRONT_ON_WHITE)
+		{
+			if(frontLeft == true || frontRight == true)		
+			{
+				if(turnStartOnWhite == true)
+				{
+					if(DEBOUNCE > 1) 
+					{
+						motor::motorStop();
+						ACTION = STAY;
+						DEBOUNCE2 = 0;
+						// ACTION = ADJUST;
+						return;
+					}
+					else
+					{
+						motor::motorStartRotate(true, SPEED_TURN);
+					}
+				}
+				else
+				{	turnStartOnWhite = true;
+					motor::motorStartRotate(true, SPEED_TURN);
+				}
+			}
+			else if(frontRight == false && frontLeft == false)	
+			{	
+				motor::motorStartRotate(true, SPEED_TURN);
+				if(turnStartOnWhite == true)
+				{
+					DEBOUNCE++;
+				}
 			}
 			else
 			{
 				motor::motorStartRotate(true, SPEED_TURN);
+				DEBOUNCE = 0;
 			}
 		}
-		else if(frontRight == false)	
+		///testing--------------------------------------------------------
+		else if(turnSensorStartCondition == TURN_BACK_ON_WHITE)
 		{
-			motor::motorStartRotate(true, SPEED_TURN);
-			DEBOUNCE++;
+			if(backLeft == true || backRight == true)		
+			{
+				if(turnStartOnWhite == true)
+				{
+					if(DEBOUNCE > 1) 
+					{
+						motor::motorStop();
+						ACTION = STAY;
+						DEBOUNCE2 = 0;
+						// ACTION = ADJUST;
+						return;
+					}
+					else
+					{
+						motor::motorStartRotate(true, SPEED_TURN);
+					}
+				}
+				else
+				{	turnStartOnWhite = true;
+					motor::motorStartRotate(true, SPEED_TURN);
+				}
+			}
+			else if(backRight == false && backLeft == false)	
+			{	
+				motor::motorStartRotate(true, SPEED_TURN);
+				if(turnStartOnWhite == true)
+				{
+					DEBOUNCE++;
+				}
+			}
+			else
+			{
+				motor::motorStartRotate(true, SPEED_TURN);
+				DEBOUNCE = 0;
+			}
 		}
+		///testing--------------------------------------------------------
 	} 
     else if(ACTION == TURNRIGHT)
 	{
-		if(frontRight == true || frontLeft == true || backLeft == true || backRight == true)		
+		if(turnSensorStartCondition == TURN_NOT_INIT)
 		{
-			if(DEBOUNCE > 2)
+			if(frontLeft == true || frontRight == true)		
 			{
-				// motor::motorStop();
-				// ACTION = STAY;
-				DEBOUNCE2 = 0;
-				ACTION = ADJUST;
-				return;
+				turnSensorStartCondition = TURN_FRONT_ON_WHITE;
+			}
+			else
+			{
+				turnSensorStartCondition = TURN_BACK_ON_WHITE;
+			}
+		}
+		
+		if(turnSensorStartCondition == TURN_FRONT_ON_WHITE)
+		{
+			if(frontLeft == true || frontRight == true)		
+			{
+				if(turnStartOnWhite == true)
+				{
+					if(DEBOUNCE > 1) 
+					{
+						motor::motorStop();
+						ACTION = STAY;
+						DEBOUNCE2 = 0;
+						// ACTION = ADJUST;
+						return;
+					}
+					else
+					{
+						motor::motorStartRotate(false, SPEED_TURN);
+					}
+				}
+				else
+				{	turnStartOnWhite = true;
+					motor::motorStartRotate(false, SPEED_TURN);
+				}
+			}
+			else if(frontRight == false && frontLeft == false)	
+			{	
+				motor::motorStartRotate(false, SPEED_TURN);
+				if(turnStartOnWhite == true)
+				{
+					DEBOUNCE++;
+				}
 			}
 			else
 			{
 				motor::motorStartRotate(false, SPEED_TURN);
+				DEBOUNCE = 0;
 			}
 		}
-		else if(frontLeft == false)	
+		///testing--------------------------------------------------------
+		else if(turnSensorStartCondition == TURN_BACK_ON_WHITE)
 		{
-			motor::motorStartRotate(false, SPEED_TURN);
-			DEBOUNCE++;
-		}
-	} 
-	else if(ACTION == BACKUP)
-	{
-		if(backLeft == true || backRight == true)
-		{		
-			if(frontLeft == true || frontRight == true)
+			if(backLeft == true || backRight == true)		
 			{
-				ACTION = STAY;	
+				if(turnStartOnWhite == true)
+				{
+					if(DEBOUNCE > 1) 
+					{
+						motor::motorStop();
+						ACTION = STAY;
+						DEBOUNCE2 = 0;
+						// ACTION = ADJUST;
+						return;
+					}
+					else
+					{
+						motor::motorStartRotate(false, SPEED_TURN);
+					}
+				}
+				else
+				{	turnStartOnWhite = true;
+					motor::motorStartRotate(false, SPEED_TURN);
+				}
+			}
+			else if(backRight == false && backLeft == false)	
+			{	
+				motor::motorStartRotate(false, SPEED_TURN);
+				if(turnStartOnWhite == true)
+				{
+					DEBOUNCE++;
+				}
 			}
 			else
 			{
-				ERRORCOUNT = 0;
-				DEBOUNCE2 = 0;
-				ACTION = ADJUST;
+				motor::motorStartRotate(false, SPEED_TURN);
+				DEBOUNCE = 0;
 			}
 		}
-		else
-		{
-		  if (frontLeft == true && frontRight == false)	//need to turn right
-		  {
-			int temp = 42 + ERRORCOUNT;
-			if( temp > SPEED_HIGH_TURN )
-			{	
-				temp = SPEED_HIGH_TURN;
-			}
-			  myMotor.motorStartRotate(false,temp);
-			
-			ERRORCOUNT++;
-		  }
-		  else if (frontLeft == false && frontRight == true)	// need to turn left
-		  {
-			int temp = 42 + ERRORCOUNT;
-			if( temp > SPEED_HIGH_TURN )
-			{	
-				temp = SPEED_HIGH_TURN;
-			}
-			  myMotor.motorStartRotate(true,temp);
-			
-			ERRORCOUNT++;
-		  }
-		  else
-		  {
-			 motor::motorStart(false, SPEED_SLOW_STOP,SPEED_SLOW_STOP);
-		  }
-		}
-	}
-	
-	else if(ACTION == BACKUP_CHECK)
+		///testing--------------------------------------------------------
+	} 
+	else if(ACTION == BACKUP)
 	{
-		if(backLeft == true && backRight == true)
-		{		
+		if(backLeft == true || backRight == true)		
+		{
 			motor::motorStop();
-			ACTION = STAY;	
+			ACTION = STAY;
 		}
 		else
 		{
-		  if (frontLeft == true && frontRight == false)	//need to turn right
-		  {
-			int temp = 42 + ERRORCOUNT;
-			if( temp > SPEED_HIGH_TURN )
-			{	
-				temp = SPEED_HIGH_TURN;
-			}
-			  myMotor.motorStartRotate(false,temp);
-			
-			ERRORCOUNT++;
-		  }
-		  else if (frontLeft == false && frontRight == true)	// need to turn left
-		  {
-			int temp = 42 + ERRORCOUNT;
-			if( temp > SPEED_HIGH_TURN )
-			{	
-				temp = SPEED_HIGH_TURN;
-			}
-			  myMotor.motorStartRotate(true,temp);
-			
-			ERRORCOUNT++;
-		  }
-		  else
-		  {
-			 motor::motorStart(false, SPEED_SLOW_STOP,SPEED_SLOW_STOP);
-		  }
+			ERRORCOUNT = 0;
+			myMotor.motorStart(false, SPEED_SLOW_STOP,SPEED_SLOW_STOP);
 		}
 	}
-	
 	else if(ACTION == ADJUST)
 	{
 		if (frontLeft == true && frontRight == true)	// on white
 		{	
 			ERRORCOUNT = 0;
 			DEBOUNCE2++;
-			if(DEBOUNCE2 > 10)
+			if(DEBOUNCE2 > 100)
 			{
 				motor::motorStop();
 				ACTION = BACKUP;
 			}
 		}
 		else if (frontLeft == true && frontRight == false)	//need to turn right
-		  {
-			int temp = 42 + ERRORCOUNT;
+		{
+			int temp = SPEED_LINE_FOLLOW + ERRORCOUNT;
 			if( temp > SPEED_HIGH_TURN )
 			{	
 				temp = SPEED_HIGH_TURN;
@@ -405,7 +493,7 @@ void sensor::process()
 		  }
 		  else if (frontLeft == false && frontRight == true)	// need to turn left
 		  {
-			int temp = 42 + ERRORCOUNT;
+			int temp = SPEED_LINE_FOLLOW + ERRORCOUNT;
 			if( temp > SPEED_HIGH_TURN )
 			{	
 				temp = SPEED_HIGH_TURN;
@@ -431,124 +519,58 @@ void sensor::process()
 
 boolean sensor::getFrontLeftWhite()
 {
-	if(digitalRead(GRIDSENS_FRONT_LEFT) == 1)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+	// if(digitalRead(GRIDSENS_FRONT_LEFT) == 1)
+	// {
+		// return true;
+	// }
+	// else
+	// {
+		// return false;
+	// }
+	
+	return (PIND & (1<<GRIDSENS_FRONT_LEFT)); 
 }
 
 boolean sensor::getFrontRightWhite()
 {
-	if(digitalRead(GRIDSENS_FRONT_RIGHT) == 1)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+	// if(digitalRead(GRIDSENS_FRONT_RIGHT) == 1)
+	// {
+		// return true;
+	// }
+	// else
+	// {
+		// return false;
+	// }
+
+	return (PIND & (1<<GRIDSENS_FRONT_RIGHT)); 
 }
 
 boolean sensor::getBackLeftWhite()
 {
-	if(digitalRead(GRIDSENS_BACK_LEFT) == 1)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}	
+	// if(digitalRead(GRIDSENS_BACK_LEFT) == 1)
+	// {
+		// return true;
+	// }
+	// else
+	// {
+		// return false;
+	// }	
+	
+	return (PIND & (1<<GRIDSENS_BACK_LEFT)); 
 }
 
 boolean sensor::getBackRightWhite()
 {
-	if(digitalRead(GRIDSENS_BACK_RIGHT) == 1)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-
-//change start
-/* boolean sensor::getFrontLeftWhite()
-{
-	if(digitalRead(GRIDSENS_FRONT_LEFT) == 0)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-
-boolean sensor::getFrontRightWhite()
-{
-	if(digitalRead(GRIDSENS_FRONT_RIGHT) == 0)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-
-boolean sensor::getBackLeftWhite()
-{
-	if(digitalRead(GRIDSENS_BACK_LEFT) == 0)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}	
-}
-
-boolean sensor::getBackRightWhite()
-{
-	if(digitalRead(GRIDSENS_BACK_RIGHT) == 0)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-} */
-////change end
-
-boolean sensor::getFrontLeftWideWhite()
-{
-	if(digitalRead(GRIDSENS_FRONT_LEFT_WIDE) == 1)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}	
-}
-
-boolean sensor::getFrontRightWideWhite()
-{
-	if(digitalRead(GRIDSENS_FRONT_RIGHT_WIDE) == 1)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+	// if(digitalRead(GRIDSENS_BACK_RIGHT) == 1)
+	// {
+		// return true;
+	// }
+	// else
+	// {
+		// return false;
+	// }
+	
+	return (PIND & (1<<GRIDSENS_BACK_RIGHT)); 
 }
 
 int sensor::getFrontTest()
@@ -656,7 +678,7 @@ void sensor::setSpeedHigh(bool val)
 	}
 }
 
-bool sensor::moveCenter(bool right)
+/* bool sensor::moveCenter(bool right)
 {
  	//Variables used
 	int numWhite=0;
@@ -805,4 +827,4 @@ bool sensor::moveCenter(bool right)
 		return false;
 	}
 			
-}
+} */
