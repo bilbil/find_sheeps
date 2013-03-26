@@ -41,6 +41,8 @@ Forward facing direction of the robot
  */
 int currentDirection;
 
+int travelled;
+
 void setup() {
   Serial.begin(BaudRate);
 
@@ -51,6 +53,7 @@ void setup() {
   //Variable declaration(s)
   drive = sensor();
   sheep = 0;
+  travelled = 0;
   delay(2000);
   //findInitialPosition();
 
@@ -329,6 +332,7 @@ void advance (int targetDirection) {
     changeOrientation(targetDirection);
   }
   moveForward();
+  travelled++;
   Serial.println("Current");
   Serial.println(posx);
   Serial.println(posy);
