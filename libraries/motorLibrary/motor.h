@@ -62,12 +62,12 @@ class motor
 	static volatile int MOTORONDURATION;  //motor PWM on duration
 	
     static void motorStartRotate(boolean left, int modulation);	// public function for rotating robot until motorStop is called
-    static int motorDirDist(int dir, int dist, int modulation);	//public function for turning robot and move a certain distance
-    static int motorDistNoBlock(int dist, int modulation);
+    // static int motorDirDist(int dir, int dist, int modulation);	//public function for turning robot and move a certain distance
+    // static int motorDistNoBlock(int dist, int modulation);
 	static int motorStart(boolean forward,int modulationLeft, int modulationRight);	//public function for moving indefinitely
     static void motorDutySet(int left, int right);	// function for PWM duty setpoint
     static void motorStop();	//public function for stopping the robot
-	static void motorDir(int dir, int modulation);	// internal helper function for turning the robot
+	// static void motorDir(int dir, int modulation);	// internal helper function for turning the robot
 	
 	static void compAInterrupt();
 	static void compBInterrupt();

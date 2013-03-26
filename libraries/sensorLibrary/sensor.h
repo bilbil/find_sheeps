@@ -8,9 +8,6 @@
 #define GRIDSENS_BACK_RIGHT  7
 #define GRIDSENS_BACK_LEFT   6
 
-#define GRIDSENS_FRONT_RIGHT_WIDE  4
-#define GRIDSENS_FRONT_LEFT_WIDE   7
-
 #define GRIDSENS_FRONT_RIGHT 5
 #define GRIDSENS_FRONT_LEFT  4
 
@@ -20,29 +17,37 @@
 #define STRAIGHT 3
 #define BACKUP 4
 #define ADJUST 5
-#define BACKUP_CHECK 6
 	
 #define DISTANCESENS_FRONT	A0
 #define DISTANCESENS_LEFT	A1
 #define DISTANCESENS_RIGHT	A2
 #define DISTANCESENS_BACK	A3
 
-#define SPEED_HIGH_STRAIGHT 60
-#define SPEED_HIGH_TURN	 67
-#define SPEED_LOW_STRAIGHT 60
-#define SPEED_LOW_TURN 60	
-#define SPEED_SLOW_STOP	 62
+#define SPEED_HIGH_STRAIGHT 45
+#define SPEED_HIGH_TURN	 45
+#define SPEED_LOW_STRAIGHT 35
+#define SPEED_LOW_TURN 35	
+#define SPEED_SLOW_STOP	 45
+
+#define SPEED_LINE_FOLLOW 40
+
+#define TURN_BACK_ON_WHITE 2
+#define TURN_FRONT_ON_WHITE 1
+#define TURN_NOT_INIT 0
 
 class sensor
 { 
   public:
     sensor();
-	
+
+	static void sensorEnable(bool val);
+
 	static void goStraightTile(int val); //user specified numver of tiles to move
 	static void rotate90Left();
 	static void rotate90Right();
 	static void rotate180Right();
 	static void rotate180Left();
+	static void adjust();
 	
 	static int DEBOUNCE;
 	static int DEBOUNCE2;
@@ -53,7 +58,9 @@ class sensor
 	static int SPEED_STRAIGHT;
 	static int SPEED_TURN;
 	
-	static bool startOnWhite;
+	static bool startOnWhite;	//flag for not miscounting the first tile when going forward
+	static bool turnStartOnWhite;	//flag for not miscounting when turning
+	static int turnSensorStartCondition;
 	
 	static void process();
 	static boolean getFrontLeftWhite();
