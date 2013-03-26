@@ -48,7 +48,8 @@ motor::motor()	//constructor
   
     TCNT2 = 0;            // preload timer
 	
-    TCCR2B = 0x02;        // 8 prescaler 3.906 kHz
+    TCCR2B = 0x02;        // 8 prescaler 7.813 kHz
+	// TCCR2B = 0x01;        // 1 prescaler 62.5 kHz
 
     // TIMSK2 |= (1 << OCIE2A);  // enable timer compare interrupt
     // TIMSK2 |= (1 << OCIE2B);  // enable timer compare interrupt

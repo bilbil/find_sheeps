@@ -474,10 +474,14 @@ void sensor::process()
 		{	
 			ERRORCOUNT = 0;
 			DEBOUNCE2++;
-			if(DEBOUNCE2 > 100)
+			if(DEBOUNCE2 > 300)
 			{
 				motor::motorStop();
 				ACTION = BACKUP;
+			}
+			else
+			{
+				myMotor.motorStart(true, SPEED_SLOW_STOP,SPEED_SLOW_STOP);
 			}
 		}
 		else if (frontLeft == true && frontRight == false)	//need to turn right
@@ -489,6 +493,7 @@ void sensor::process()
 			}
 			  myMotor.motorStartRotate(false,temp);
 			
+			DEBOUNCE2 = 0;
 			ERRORCOUNT++;
 		  }
 		  else if (frontLeft == false && frontRight == true)	// need to turn left
@@ -500,6 +505,7 @@ void sensor::process()
 			}
 			  myMotor.motorStartRotate(true,temp);
 			
+			DEBOUNCE2 = 0;
 			ERRORCOUNT++;
 		  }
 		  else
