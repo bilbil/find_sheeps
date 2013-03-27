@@ -8,6 +8,9 @@ sensor drive;
 
 long BaudRate = 4800;
 
+unsigned long startTime;
+unsigned long elapsedTime;
+
 /*Beacon and distance readings; 
  First array notates the current direction; 
  Second array stores the sensor readings in the following order:
@@ -45,6 +48,8 @@ int travelled;
 
 void setup() {
   Serial.begin(BaudRate);
+
+  startTime = millis();
 
   // put your setup code here, to run once:
   //We set the starting direction of the robot to 'North'; every change after this point will be the relative direction
@@ -426,7 +431,13 @@ void goHome() {
   {
     advance(3);
   }
+ elapsedTime = millis() - startTime;
+ Serial.println(elapsedTime);
  return; 
+}
+
+void avoid() {
+  
 }
 
 void test_orientationChange () {
