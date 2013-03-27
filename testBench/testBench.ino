@@ -437,13 +437,31 @@ void goHome() {
   {
     advance(3);
   }
- elapsedTime = millis() - startTime;
- Serial.println(elapsedTime);
  return; 
 }
 
 void avoid() {
-  
+  if (getDistanceLeft() > getDistanceRight())
+  {
+    turnLeft();
+    while (getDistanceRight == 0) {
+      moveForward();
+    }
+    turnRight();
+  }
+  else
+  {
+    turnRight();
+    while (getDistanceLeft == 0) {
+      moveForward();
+    }
+    turnLeft();
+  }
+}
+
+void calculateElapsedTime () {
+  elapsedTime = millis() - startTime;
+  Serial.println(elapsedTime);
 }
 
 void test_orientationChange () {
