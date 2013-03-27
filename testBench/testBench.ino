@@ -115,52 +115,58 @@ void loop() {
     {
       goHome();
     }
+    else if(incomingByte == 'r')
+    {
+      randomWalk();
+    }
   } 
 }
 
 void randomWalk() {
   switch(section) {
   case 1:
-    while (posy < 120) {
+    while (posy < 8) {
+      moveForward();
+      thicketSearch();
       if (isRescueComplete) {
         return;
       }
     }
-    moveForward();
-    thicketSearch();
     section = 2;
     break;
+    
   case 2:
-    if (posx < 80) {
+    if (posx < 4) {
       changeOrientation(2);
-      while (posx <120) {
+      while (posx <6) {
+        moveForward();
+        thicketSearch();
         if (isRescueComplete) {
           return;
         }
-        moveForward();
-        thicketSearch();
       }
       section = 3;
     }
     else {
       changeOrientation(4);
-      while (posx > 40) {
+      while (posx > 2) {
+        moveForward();
+        thicketSearch();
         if (isRescueComplete) {
           return;
         }
-        moveForward();
-        thicketSearch();
       }
       section = 3;
     }
     break;
+  
   case 3:
-    while (posy > 40) {
+    while (posy > 2) {
+      moveForward();
+      thicketSearch();
       if (isRescueComplete) {
         return;
       }
-      moveForward();
-      thicketSearch();
     }
     break;
   default:
