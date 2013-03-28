@@ -55,17 +55,16 @@ void setup()
   pinMode(GRIDSENS_FRONT_RIGHT,INPUT); //Front Right
   pinMode(GRIDSENS_BACK_LEFT,INPUT); //Back Left
   pinMode(GRIDSENS_BACK_RIGHT,INPUT); //Back Right
-  
+
   Serial.begin(4800);
   totalDistance = 0;
-//testBeacon();
 }
 
 void loop()
 {
   //Wait 1 second
   delay(1000);
-    beacon1rescue();
+  beacon1rescue();
   //  beacon2rescue();
   //  goHome();
 }
@@ -193,46 +192,6 @@ int goStraight(int state)
       break;
     }
 
-    //    //Aligning the robot by backing up after crossing
-    //    case 4:
-    //    if(frontLeft == true && frontRight == true)
-    //    {
-    //      return 5;
-    //      break;
-    //    }
-    //    else
-    //    {
-    //      if(frontLeft == false)
-    //      {
-    //        //adjust to left
-    //        startMotor(true,forwardSlowSpeed,gridSpeed);
-    //      }
-    //      else
-    //      {
-    //        //adjust to right
-    //        startMotor(true,gridSpeed,forwardSlowSpeed);
-    //      }
-    //      return 4;
-    //      break;
-    //    }
-    //    
-    //    //Going back to the center of the cross (make sure they cross black)
-    //    case 5:
-    //    if(backLeft == false && backRight == false)
-    //    {
-    //      stopMotor();
-    //      delay(100);
-    //      return 6;
-    //      break;
-    //    }
-    //    else
-    //    {
-    //      startMotor(false,gridSpeed,gridSpeed);
-    //      return 5;
-    //      break;
-    //    }
-    //    
-    //Stop at white
   case 6:
     if(backLeft == true || backRight == true)
     {
@@ -368,27 +327,9 @@ int moveCenter(int state)
     }
     else
     {
-      //      if(backLeft == false)
-      //      {
-      //        //adjust to left
-      //        startMotor(false,backwardSlowSpeed,gridSpeed);
-      //        return 2;
-      //        break;
-      //      }
-      //      else
-      //      {
-      //        //adjust to right
-      //        startMotor(false,gridSpeed,backwardSlowSpeed);
-      //        return 2;
-      //        break;
-      //      }
       counter = 0;
       if(frontLeft == false)
       {
-        //adjust to left
-        //        startMotor(false,backwardSlowSpeed,backwardSpeed);
-        //        while(getFrontRightWhite() || getBackRightWhite())
-        //        {}
         startMotor(false,backwardSpeed,backwardSpeed);
         while(!getBackLeftWhite())
         {
@@ -404,10 +345,6 @@ int moveCenter(int state)
       }
       else if(frontRight == false)
       {
-        //adjust to right
-        //        startMotor(false,backwardSpeed,backwardSlowSpeed);
-        //        while(getFrontLeftWhite() || getBackLeftWhite())
-        //        {}
         startMotor(false,backwardSpeed,backwardSpeed);
         while(!getBackRightWhite())
         {
@@ -628,13 +565,7 @@ void goHome ()
   }
   else if(beacon.getFrontBeacon()==2 && getFrontGrid()==0)
   {
-    //Stop
-    while(1)
-    {
-      //TODO: rescue routine, then return
-      int i = 0;
-      return;
-    }
+    return;
   }
   else if(getFrontGrid() == 0)
   {
@@ -669,79 +600,79 @@ void beacon1rescue ()
 {
   while (1)
   {
-  if(beacon.getLeftBeacon()==1)
-  {
-    //Turn left
-    state = 1;
-    while(state!=0)
+    if(beacon.getLeftBeacon()==1)
     {
-      state = turnLeft(state);
-    }
+      //Turn left
+      state = 1;
+      while(state!=0)
+      {
+        state = turnLeft(state);
+      }
 
-    state = 1;
-    while(state!=0)
+      state = 1;
+      while(state!=0)
+      {
+        state = moveCenter(state);
+      }
+    }
+    else if(beacon.getRightBeacon()==1)
     {
-      state = moveCenter(state);
+      //Turn right
+      state = 1;
+      while(state!=0)
+      {
+        state = turnRight(state);
+      }
+
+      state = 1;
+      while(state!=0)
+      {
+        state = moveCenter(state);
+      }
+    }
+    else if(beacon.getBackBeacon()==1)
+    {
+      //Turn 180
+      state = 1;
+      while(state!=0)
+      {
+        state = turnRight(state);
+      }
+
+      state = 1;
+      while(state!=0)
+      {
+        state = moveCenter(state);
+      }
+
+      state = 1;
+      while(state!=0)
+      {
+        state = turnRight(state);
+      }
+
+      state = 1;
+      while(state!=0)
+      {
+        state = moveCenter(state);
+      }
+    }
+    else if(beacon.getFrontBeacon()==1 && getFrontGrid()==0)
+    {
+      delay(2000);
+      rescue();
+      return;
+    }
+    else
+    {
+      state = 1;
+      while(state!=0)
+      {
+        state = goStraight(state);
+        totalDistance++;
+      }
     }
   }
-  else if(beacon.getRightBeacon()==1)
-  {
-    //Turn right
-    state = 1;
-    while(state!=0)
-    {
-      state = turnRight(state);
-    }
-
-    state = 1;
-    while(state!=0)
-    {
-      state = moveCenter(state);
-    }
-  }
-  else if(beacon.getBackBeacon()==1)
-  {
-    //Turn 180
-    state = 1;
-    while(state!=0)
-    {
-      state = turnRight(state);
-    }
-
-    state = 1;
-    while(state!=0)
-    {
-      state = moveCenter(state);
-    }
-
-    state = 1;
-    while(state!=0)
-    {
-      state = turnRight(state);
-    }
-
-    state = 1;
-    while(state!=0)
-    {
-      state = moveCenter(state);
-    }
-  }
-  else if(beacon.getFrontBeacon()==1 && getFrontGrid()==0)
-  {
-    delay(2000);
-    rescue();
-    return;
-  }
-  else
-  {
-    state = 1;
-    while(state!=0)
-    {
-      state = goStraight(state);
-      totalDistance++;
-    }
-  }
-}
 }
 
 void rescue() {
@@ -751,9 +682,8 @@ void rescue() {
     delay(700);
     stopMotor();
     delay(300);
-//    retrieved = retrieve();
+    //    retrieved = retrieve();
     delay(1000);
-//    Serial.println(retrieved);
   }
   //move back
   startMotor(false,backwardSpeed,backwardSpeed);
@@ -781,3 +711,4 @@ boolean retrieve () {
   }
   return false;
 }
+
