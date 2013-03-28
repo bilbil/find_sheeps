@@ -8,10 +8,10 @@
 #define MotorLBackward 5
 #define MotorRForward 3
 #define MotorRBackward 11
-#define frontIR 4
-#define leftIR 7
-#define backIR 8
-#define rightIR 3
+#define frontIR 2
+#define leftIR 4
+#define backIR 7
+#define rightIR 8
 #define DISTANCESENS_FRONT	A0
 #define DISTANCESENS_LEFT	A1
 #define DISTANCESENS_RIGHT	A2
@@ -57,18 +57,17 @@ void setup()
   pinMode(GRIDSENS_BACK_RIGHT,INPUT); //Back Right
   
   Serial.begin(4800);
-  
   totalDistance = 0;
+//testBeacon();
 }
 
 void loop()
 {
   //Wait 1 second
   delay(1000);
-  beacon1rescue();
-//  beacon2rescue();
-  goHome();
-  return;
+    beacon1rescue();
+  //  beacon2rescue();
+  //  goHome();
 }
 
 void startMotor(boolean forward, int leftMotor, int rightMotor)
@@ -114,37 +113,37 @@ void stopMotor()
   digitalWrite(MotorLBackward,LOW);
   digitalWrite(MotorRBackward,LOW);
 }
-  
+
 int goStraight(int state)
 {
   updateSensors();
   switch(state)
   {
     //Make sure robot move forward a bit
-    case 1:
+  case 1:
     startMotor(true,forwardSpeed,forwardSpeed);
     delay(250);
     return 2;
     break;
-    
+
     //Grid following until robot reaches next cross
-    case 2:
+  case 2:
     if(frontLeft == false)
     {
-        if(frontRight == false)
-        {
-          //grid approaching
-          startMotor(true,gridSpeed,gridSpeed);
-          return 3;
-          break;
-        }
-        else
-        {
-          //adjust to left
-          startMotor(true,forwardSlowSpeed,forwardSpeed);
-          return 2;
-          break;
-        }
+      if(frontRight == false)
+      {
+        //grid approaching
+        startMotor(true,gridSpeed,gridSpeed);
+        return 3;
+        break;
+      }
+      else
+      {
+        //adjust to left
+        startMotor(true,forwardSlowSpeed,forwardSpeed);
+        return 2;
+        break;
+      }
     }
     else if (frontRight == false)
     {
@@ -160,9 +159,9 @@ int goStraight(int state)
       return 2;
       break;
     }
-    
+
     //Motor control when robot is in cross
-    case 3:
+  case 3:
     if(frontLeft == true || frontRight == true)
     {
       stopMotor();
@@ -176,7 +175,7 @@ int goStraight(int state)
       {
         //adjust to left
         startMotor(true,forwardSlowSpeed,gridSpeed);
-        
+
       }
       else
       {
@@ -193,48 +192,48 @@ int goStraight(int state)
       return 3;
       break;
     }
-    
-//    //Aligning the robot by backing up after crossing
-//    case 4:
-//    if(frontLeft == true && frontRight == true)
-//    {
-//      return 5;
-//      break;
-//    }
-//    else
-//    {
-//      if(frontLeft == false)
-//      {
-//        //adjust to left
-//        startMotor(true,forwardSlowSpeed,gridSpeed);
-//      }
-//      else
-//      {
-//        //adjust to right
-//        startMotor(true,gridSpeed,forwardSlowSpeed);
-//      }
-//      return 4;
-//      break;
-//    }
-//    
-//    //Going back to the center of the cross (make sure they cross black)
-//    case 5:
-//    if(backLeft == false && backRight == false)
-//    {
-//      stopMotor();
-//      delay(100);
-//      return 6;
-//      break;
-//    }
-//    else
-//    {
-//      startMotor(false,gridSpeed,gridSpeed);
-//      return 5;
-//      break;
-//    }
-//    
+
+    //    //Aligning the robot by backing up after crossing
+    //    case 4:
+    //    if(frontLeft == true && frontRight == true)
+    //    {
+    //      return 5;
+    //      break;
+    //    }
+    //    else
+    //    {
+    //      if(frontLeft == false)
+    //      {
+    //        //adjust to left
+    //        startMotor(true,forwardSlowSpeed,gridSpeed);
+    //      }
+    //      else
+    //      {
+    //        //adjust to right
+    //        startMotor(true,gridSpeed,forwardSlowSpeed);
+    //      }
+    //      return 4;
+    //      break;
+    //    }
+    //    
+    //    //Going back to the center of the cross (make sure they cross black)
+    //    case 5:
+    //    if(backLeft == false && backRight == false)
+    //    {
+    //      stopMotor();
+    //      delay(100);
+    //      return 6;
+    //      break;
+    //    }
+    //    else
+    //    {
+    //      startMotor(false,gridSpeed,gridSpeed);
+    //      return 5;
+    //      break;
+    //    }
+    //    
     //Stop at white
-    case 6:
+  case 6:
     if(backLeft == true || backRight == true)
     {
       stopMotor();
@@ -256,14 +255,14 @@ int turnLeft(int state)
   switch(state)
   {
     //Make sure the robot starts turning a bit
-    case 1:
+  case 1:
     startTurn(true,turnSpeed);
     delay(200);
     return 2;
     break;
-    
+
     //Turns to the left till two sensors are both in black
-    case 2:
+  case 2:
     if(frontLeft == false && backRight == false)
     {
       startTurn(true,turnSpeed);
@@ -276,9 +275,9 @@ int turnLeft(int state)
       return 2;
       break;
     }
-    
+
     //Once both sensors are black turn until one of them are white
-    case 3:
+  case 3:
     if(frontLeft == true || backRight == true)
     {
       stopMotor();
@@ -300,14 +299,14 @@ int turnRight(int state)
   switch(state)
   {
     //Make sure the robot starts turning a bit
-    case 1:
+  case 1:
     startTurn(false,turnSpeed);
     delay(200);
     return 2;
     break;
-    
+
     //Turns to the left till two sensors are both in black
-    case 2:
+  case 2:
     if(frontRight == false && backLeft == false)
     {
       startTurn(false,turnSpeed);
@@ -320,9 +319,9 @@ int turnRight(int state)
       return 2;
       break;
     }
-    
+
     //Once both sensors are black turn until one of them are white
-    case 3:
+  case 3:
     if(frontRight == true || backLeft == true)
     {
       stopMotor();
@@ -344,11 +343,11 @@ int moveCenter(int state)
   switch(state)
   {
     //Move robot backwards
-    case 1:
+  case 1:
     if(backRight == true || backLeft == true)
     {
       stopMotor();
-//      delay(100);
+      //      delay(100);
       return 2;
       break;
     }
@@ -358,9 +357,9 @@ int moveCenter(int state)
       return 1;
       break;
     }
-    
+
     //Align itself
-    case 2:
+  case 2:
     if(backRight == true && backLeft == true)
     {
       stopMotor();
@@ -369,34 +368,36 @@ int moveCenter(int state)
     }
     else
     {
-//      if(backLeft == false)
-//      {
-//        //adjust to left
-//        startMotor(false,backwardSlowSpeed,gridSpeed);
-//        return 2;
-//        break;
-//      }
-//      else
-//      {
-//        //adjust to right
-//        startMotor(false,gridSpeed,backwardSlowSpeed);
-//        return 2;
-//        break;
-//      }
+      //      if(backLeft == false)
+      //      {
+      //        //adjust to left
+      //        startMotor(false,backwardSlowSpeed,gridSpeed);
+      //        return 2;
+      //        break;
+      //      }
+      //      else
+      //      {
+      //        //adjust to right
+      //        startMotor(false,gridSpeed,backwardSlowSpeed);
+      //        return 2;
+      //        break;
+      //      }
       counter = 0;
       if(frontLeft == false)
       {
         //adjust to left
-//        startMotor(false,backwardSlowSpeed,backwardSpeed);
-//        while(getFrontRightWhite() || getBackRightWhite())
-//        {}
+        //        startMotor(false,backwardSlowSpeed,backwardSpeed);
+        //        while(getFrontRightWhite() || getBackRightWhite())
+        //        {}
         startMotor(false,backwardSpeed,backwardSpeed);
         while(!getBackLeftWhite())
-        {}
+        {
+        }
         startMotor(true,gridSpeed,gridSpeed);
         while(getBackLeftWhite())
-        
-        {}
+
+        {
+        }
         stopMotor();
         return 4;
         break;
@@ -404,15 +405,17 @@ int moveCenter(int state)
       else if(frontRight == false)
       {
         //adjust to right
-//        startMotor(false,backwardSpeed,backwardSlowSpeed);
-//        while(getFrontLeftWhite() || getBackLeftWhite())
-//        {}
+        //        startMotor(false,backwardSpeed,backwardSlowSpeed);
+        //        while(getFrontLeftWhite() || getBackLeftWhite())
+        //        {}
         startMotor(false,backwardSpeed,backwardSpeed);
         while(!getBackRightWhite())
-        {}
+        {
+        }
         startMotor(true,gridSpeed,gridSpeed);
         while(getBackRightWhite())
-        {}
+        {
+        }
         stopMotor();
         return 5;
         break;
@@ -421,15 +424,16 @@ int moveCenter(int state)
       {
         startMotor(false,backwardSpeed,backwardSpeed);
         while(!getBackLeftWhite() && !getBackRightWhite())
-        {}
+        {
+        }
         stopMotor();
         return 3;
         break;
       }
     }
-    
+
     //go forward
-    case 3:
+  case 3:
     if(frontLeft == true || frontRight == true)
     {
       stopMotor();
@@ -442,9 +446,9 @@ int moveCenter(int state)
       return 3;
       break;
     }
-    
+
     //go forward bit to right
-    case 4:
+  case 4:
     if(frontRight == true)
     {
       stopMotor();
@@ -457,9 +461,9 @@ int moveCenter(int state)
       return 4;
       break;
     }
-    
+
     //go forward bit to left
-    case 5:
+  case 5:
     if(frontLeft == true)
     {
       stopMotor();
@@ -473,148 +477,6 @@ int moveCenter(int state)
       break;
     }
   }
-
-        
-  
-// 	//Variables used
-//	numWhite=0;
-//	updateSensors();
-//	
-//	if(frontLeft)
-//		numWhite++;
-//	if(frontRight)
-//		numWhite++;
-//	if(backLeft)
-//		numWhite++;
-//	if(backRight)
-//		numWhite++;
-//		
-//	if(numWhite>2)
-//	{
-//		return true;
-//		// Do nothing it is probably in the center}
-//	}
-//	else
-//	{
-//		if(numWhite == 1)
-//		{
-//			if(frontLeft)
-//			{
-//				startMotor(false,gridSpeed,gridSpeed);
-//				while(getFrontLeftWhite() || getFrontRightWhite())
-//				{}
-//				startMotor(true,turnSpeed,0);
-//				while(getFrontLeftWhite())
-//				{}
-//				startMotor(true,0,turnSpeed);
-//				while(getFrontRightWhite())
-//				{}
-//				stopMotor();
-//			}
-//			else if(frontRight)
-//			{
-//				startMotor(false,gridSpeed,gridSpeed);
-//				while(getFrontLeftWhite() || getFrontRightWhite())
-//				{}
-//				startMotor(true,0,turnSpeed);
-//				while(getFrontRightWhite())
-//				{}
-//				startMotor(true,turnSpeed,0);
-//				while(getFrontLeftWhite())
-//				{}
-//				stopMotor();
-//			}
-//			else if(backLeft)
-//			{
-//				startMotor(true,gridSpeed,gridSpeed);
-//				while(getBackLeftWhite() || getFrontRightWhite())
-//				{}
-//				startMotor(false,turnSpeed,0);
-//				while(getBackLeftWhite())
-//				{}
-//				startMotor(false,0,turnSpeed);
-//				while(getBackRightWhite())
-//				{}
-//				stopMotor();
-//			}
-//			else
-//			{
-//				startMotor(true,gridSpeed,gridSpeed);
-//				while(getBackLeftWhite() || getFrontRightWhite())
-//				{}
-//				startMotor(false,0,turnSpeed);
-//				while(getBackRightWhite())
-//				{}
-//				startMotor(false,turnSpeed,0);
-//				while(getBackLeftWhite())
-//				{}
-//				stopMotor();
-//			}
-//		}
-//		else if(numWhite == 2)
-//		{
-//			if(frontLeft && frontRight)
-//			{
-//				startMotor(false,gridSpeed,gridSpeed);
-//				while(!getBackLeftWhite() && !getBackRightWhite())
-//				{}
-//				stopMotor();
-//			}
-//			else if(frontLeft && backLeft)
-//			{
-//				startMotor(true,turnSpeed,0);
-//				while(getFrontLeftWhite())
-//				{}
-//				startMotor(true,gridSpeed,gridSpeed);
-//				while(!getFrontRightWhite())
-//				{}
-//				startMotor(true,0,turnSpeed);
-//				while(!getFrontLeftWhite())
-//				{}
-//				stopMotor();
-//			}
-//			else if(frontLeft && backRight)
-//			{
-//				startMotor(true,0,turnSpeed);
-//				while(getBackRightWhite())
-//				{}
-//				stopMotor();
-//			}
-//			else if(frontRight && backLeft)
-//			{
-//				startMotor(true,turnSpeed,0);
-//				while(getBackLeftWhite())
-//				{}
-//				stopMotor();
-//			}
-//			else if(frontRight && backRight)
-//			{
-//				startMotor(true,0,turnSpeed);
-//				while(getFrontRightWhite())
-//				{}
-//				startMotor(true,gridSpeed,gridSpeed);
-//				while(!getFrontLeftWhite())
-//				{}
-//				startMotor(true,0,turnSpeed);
-//				while(!getFrontRightWhite())
-//			        {}
-//				stopMotor();
-//			}
-//			else
-//			{
-//				startMotor(true,gridSpeed,gridSpeed);
-//				while(!getFrontLeftWhite() && !getFrontRightWhite())
-//                                {}
-//				stopMotor();
-//			}
-//		}
-//		else
-//		{
-//			// All black turn more to the direction of the movement
-//		}
-//		return false;
-//	}
-			
 }
 
 void updateSensors()
@@ -647,145 +509,67 @@ boolean getBackRightWhite()
 
 int getFrontGrid()
 {
-	double front_volt=0;
-	for(int i=0;i<10;i++)
-	{
-		distance_front = analogRead(DISTANCESENS_FRONT); 
-		front_volt = (float)5/(float)1024*(float)distance_front+front_volt;
-	}
-	front_volt = front_volt/10;
-	if(front_volt>1.80)
-		grid = 0;
-	  else if(front_volt>0.89)
-		grid = 1;
-	  else if(front_volt>0.65)
-		grid = 2;
-	  else
-		grid = 10;
-	return grid;
+  double front_volt=0;
+  for(int i=0;i<10;i++)
+  {
+    distance_front = analogRead(DISTANCESENS_FRONT); 
+    front_volt = (float)5/(float)1024*(float)distance_front+front_volt;
+  }
+  front_volt = front_volt/10;
+  if(front_volt>1.80)
+    grid = 0;
+  else if(front_volt>0.89)
+    grid = 1;
+  else if(front_volt>0.65)
+    grid = 2;
+  else
+    grid = 10;
+  return grid;
 }
 
 int getLeftGrid()
 {
-	double left_volt=0;
-	for(int i=0;i<3;i++)
-	{
-		distance_left = analogRead(DISTANCESENS_LEFT); 
-		left_volt = (float)5/(float)1024*(float)distance_left+left_volt;
-	}
-	left_volt = left_volt/3;
-	if(left_volt>1.64)
-		grid = 0;
-	  else if(left_volt>1.34)
-		grid = 1;
-	  else if(left_volt>1.10)
-		grid = 2;
-	  else
-		grid = 10;
-	return grid;
+  double left_volt=0;
+  for(int i=0;i<3;i++)
+  {
+    distance_left = analogRead(DISTANCESENS_LEFT); 
+    left_volt = (float)5/(float)1024*(float)distance_left+left_volt;
+  }
+  left_volt = left_volt/3;
+  if(left_volt>1.64)
+    grid = 0;
+  else if(left_volt>1.34)
+    grid = 1;
+  else if(left_volt>1.10)
+    grid = 2;
+  else
+    grid = 10;
+  return grid;
 }
 
 int getRightGrid()
 {
-	double right_volt=0;
-	for(int i=0;i<3;i++)
-	{
-		distance_right = analogRead(DISTANCESENS_RIGHT); 
-		right_volt = (float)5/(float)1024*(float)distance_right+right_volt;
-	}
-	right_volt = right_volt/3;
-	if(right_volt>1.73)
-		grid = 0;
-	  else if(right_volt>0.85)
-		grid = 1;
-	  else if(right_volt>0.6)
-		grid = 2;
-	  else
-		grid = 10;
-	return grid;
-}
-void beacon2rescue ()
-{
-if(beacon.getLeftBeacon()==2)
+  double right_volt=0;
+  for(int i=0;i<3;i++)
   {
-    //Turn left
-    state = 1;
-    while(state!=0)
-    {
-      state = turnLeft(state);
-    }
-    
-    state = 1;
-    while(state!=0)
-    {
-      state = moveCenter(state);
-    }
+    distance_right = analogRead(DISTANCESENS_RIGHT); 
+    right_volt = (float)5/(float)1024*(float)distance_right+right_volt;
   }
-  else if(beacon.getRightBeacon()==2)
-  {
-    //Turn right
-    state = 1;
-    while(state!=0)
-    {
-      state = turnRight(state);
-    }
-    
-    state = 1;
-    while(state!=0)
-    {
-      state = moveCenter(state);
-    }
-  }
-  else if(beacon.getBackBeacon()==2)
-  {
-    //Turn 180
-    state = 1;
-    while(state!=0)
-    {
-      state = turnRight(state);
-    }
-    
-    state = 1;
-    while(state!=0)
-    {
-      state = moveCenter(state);
-    }
-    
-    state = 1;
-    while(state!=0)
-    {
-      state = turnRight(state);
-    }
-
-    state = 1;
-    while(state!=0)
-    {
-      state = moveCenter(state);
-    }
-  }
-  else if(beacon.getFrontBeacon()==2 && getFrontGrid()==0)
-  {
-    //Stop
-    while(1)
-    {
-	//TODO: rescue routine, then return
-      int i = 0;
-      return;
-    }
-  }
+  right_volt = right_volt/3;
+  if(right_volt>1.73)
+    grid = 0;
+  else if(right_volt>0.85)
+    grid = 1;
+  else if(right_volt>0.6)
+    grid = 2;
   else
-  {
-    state = 1;
-    while(state!=0)
-    {
-      state = goStraight(state);
-      totalDistance++;
-    }
-  }
+    grid = 10;
+  return grid;
 }
+
 void goHome ()
 {
-if(beacon.getLeftBeacon()==2)
+  if(beacon.getLeftBeacon()==2)
   {
     //Turn left
     state = 1;
@@ -793,7 +577,7 @@ if(beacon.getLeftBeacon()==2)
     {
       state = turnLeft(state);
     }
-    
+
     state = 1;
     while(state!=0)
     {
@@ -808,7 +592,7 @@ if(beacon.getLeftBeacon()==2)
     {
       state = turnRight(state);
     }
-    
+
     state = 1;
     while(state!=0)
     {
@@ -823,13 +607,13 @@ if(beacon.getLeftBeacon()==2)
     {
       state = turnRight(state);
     }
-    
+
     state = 1;
     while(state!=0)
     {
       state = moveCenter(state);
     }
-    
+
     state = 1;
     while(state!=0)
     {
@@ -847,7 +631,7 @@ if(beacon.getLeftBeacon()==2)
     //Stop
     while(1)
     {
-	//TODO: rescue routine, then return
+      //TODO: rescue routine, then return
       int i = 0;
       return;
     }
@@ -855,20 +639,20 @@ if(beacon.getLeftBeacon()==2)
   else if(getFrontGrid() == 0)
   {
     for (int i = 0; i < 2; i++)
-	{
-    //Turn right
-    state = 1;
-    while(state!=0)
     {
-      state = turnRight(state);
+      //Turn right
+      state = 1;
+      while(state!=0)
+      {
+        state = turnRight(state);
+      }
+
+      state = 1;
+      while(state!=0)
+      {
+        state = moveCenter(state);
+      }
     }
-    
-    state = 1;
-    while(state!=0)
-    {
-      state = moveCenter(state);
-    }
-  }
   }
   else
   {
@@ -883,7 +667,9 @@ if(beacon.getLeftBeacon()==2)
 
 void beacon1rescue ()
 {
-if(beacon.getLeftBeacon()==1)
+  while (1)
+  {
+  if(beacon.getLeftBeacon()==1)
   {
     //Turn left
     state = 1;
@@ -891,7 +677,7 @@ if(beacon.getLeftBeacon()==1)
     {
       state = turnLeft(state);
     }
-    
+
     state = 1;
     while(state!=0)
     {
@@ -906,7 +692,7 @@ if(beacon.getLeftBeacon()==1)
     {
       state = turnRight(state);
     }
-    
+
     state = 1;
     while(state!=0)
     {
@@ -921,13 +707,13 @@ if(beacon.getLeftBeacon()==1)
     {
       state = turnRight(state);
     }
-    
+
     state = 1;
     while(state!=0)
     {
       state = moveCenter(state);
     }
-    
+
     state = 1;
     while(state!=0)
     {
@@ -942,7 +728,9 @@ if(beacon.getLeftBeacon()==1)
   }
   else if(beacon.getFrontBeacon()==1 && getFrontGrid()==0)
   {
+    delay(2000);
     rescue();
+    return;
   }
   else
   {
@@ -954,31 +742,39 @@ if(beacon.getLeftBeacon()==1)
     }
   }
 }
+}
 
 void rescue() {
-  boolean rescued = false;
-  while (!rescued) {
+  boolean retrieved = false;
+  for (int i = 0; i < 3; i++) {
     startMotor(true,forwardSpeed,forwardSpeed);
+    delay(700);
     stopMotor();
-    rescued = retrieve();
+    delay(300);
+//    retrieved = retrieve();
+    delay(1000);
+//    Serial.println(retrieved);
   }
   //move back
   startMotor(false,backwardSpeed,backwardSpeed);
   while(!(getBackLeftWhite()==false && getBackRightWhite()==false))
-  {}
+  {
+  }
   while(!(getBackLeftWhite() == true || getBackRightWhite() == true))
-  {}
+  {
+  }
   stopMotor();
-  
+
   return;
 }
 
 boolean retrieve () {
   int counter = 0;
-  while (counter < 100)
+  while (counter < 10000)
   {
     if(digitalRead(A4))
     {
+      Serial.println("Debug");
       return true;
     }
     counter++;
