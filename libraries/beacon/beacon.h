@@ -12,9 +12,9 @@
 #define ____beacon__
 
 #define frontAnalog 3
-#define frontDigital 3
-#define backDigital 9
-#define rightDigital 2
+#define frontDigital 2
+#define backDigital 4
+#define rightDigital 7
 #define leftDigital 8
 
 class Beacon {
