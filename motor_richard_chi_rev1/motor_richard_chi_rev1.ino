@@ -954,9 +954,15 @@ if(beacon.getLeftBeacon()==1)
 }
 
 void rescue() {
-  while(!digitalRead(A4))
+  //move a little forward
+  while (1)
   {
-    //move a little forward
+    if (digitalRead(A4)) {
+      //kill the motors
+      Serial.println("detected");
+      break;
+    }
   }
-  //move back routine
+  //move back
+  return;
 }
