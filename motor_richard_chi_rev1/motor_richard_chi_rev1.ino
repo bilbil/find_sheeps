@@ -43,6 +43,7 @@ int state = 0;
 
 int totalDistance;
 Beacon beacon;
+
 void setup()
 {
   pinMode(10,OUTPUT); //Motor 1 forward
@@ -55,6 +56,8 @@ void setup()
   pinMode(7,INPUT); //Back Right
   
   Serial.begin(4800);
+  
+  totalDistance = 0;
 }
 
 void loop()
@@ -62,7 +65,7 @@ void loop()
   //Wait 1 second
   delay(1000);
   beacon1rescue();
-  beacon2rescue();
+//  beacon2rescue();
   goHome();
   return;
 }
@@ -937,13 +940,7 @@ if(beacon.getLeftBeacon()==1)
   }
   else if(beacon.getFrontBeacon()==1 && getFrontGrid()==0)
   {
-    //Stop
-    while(1)
-    {
-	//TODO: rescue routine, move forward, check short pin, move forward, check short pin, uturn then return
-      int i = 0;
-      return;
-    }
+    rescue();
   }
   else
   {
@@ -954,4 +951,12 @@ if(beacon.getLeftBeacon()==1)
       totalDistance++;
     }
   }
+}
+
+void rescue() {
+  while(!digitalRead(A4))
+  {
+    //move a little forward
+  }
+  //move back routine
 }
