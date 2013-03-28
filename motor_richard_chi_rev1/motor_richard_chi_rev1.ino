@@ -954,9 +954,21 @@ if(beacon.getLeftBeacon()==1)
 }
 
 void rescue() {
-  while(!digitalRead(A4))
+  while (!readCatcher())
   {
     //move a little forward
   }
   //move back routine
+  return;
+}
+
+boolean readCatcher () {
+  int counter = 0;
+  while (counter < 1000)
+  {
+    if (digitalRead(A4)) {
+      return true;
+    }
+  }
+  return false;
 }
