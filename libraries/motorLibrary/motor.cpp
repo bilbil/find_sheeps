@@ -101,8 +101,14 @@ void motor::motorDutySet(int left, int right)
 	MOTORDUTYLEFT = left;
 	MOTORDUTYRIGHT = right;
 	
-	OCR2B = motor::MOTORDUTYRIGHT*255/100;            // set compare registers to duty
-	OCR2A = motor::MOTORDUTYLEFT*255/100;            // set compare registers to duty
+	
+	//original
+	// OCR2B = motor::MOTORDUTYRIGHT*255/100;            // set compare registers to duty
+	// OCR2A = motor::MOTORDUTYLEFT*255/100;            // set compare registers to duty
+	
+	//PCB version with some motor swapped
+	OCR2A = motor::MOTORDUTYRIGHT*255/100;            // set compare registers to duty
+	OCR2B = motor::MOTORDUTYLEFT*255/100;            // set compare registers to duty
 }
 
 void motor::motorStop()
@@ -165,15 +171,14 @@ void motor::overFlowInterrupt()
 			// PORTB &= B11000011;	//original
 			// PORTB |= B00011000;	//original	
 			// PORTB |= B00011000;	//switched pin 4 and 5 version
-			
+
 			//PCB version start
 			//stop first
 			PORTB &= B11110111;	//left motor input 2 is PB3 (4th bit)
 			PORTD &= B10010111;	//right motor input 3 is PD6 (7th bit), right motor input 4 is PD5 (6th bit), left motor input 1 is PD3 (4th bit)
 			
-			//turn left input 2 and right input 3
-			PORTB |= B00001000;	//left motor input 2 is PB3 (4th bit)
-			PORTD |= B01000000;	//right motor input 3 is PD6 (7th bit), right motor input 4 is PD5 (6th bit), left motor input 1 is PD3 (4th bit)
+			//turn left input 1 and right input 4
+			PORTD |= B00101000;	//right motor input 3 is PD6 (7th bit), right motor input 4 is PD5 (6th bit), left motor input 1 is PD3 (4th bit)
 			 //PCB version end
 		break;
 		case MOTORPIVOTRIGHT:
@@ -186,9 +191,11 @@ void motor::overFlowInterrupt()
 			PORTB &= B11110111;	//left motor input 2 is PB3 (4th bit)
 			PORTD &= B10010111;	//right motor input 3 is PD6 (7th bit), right motor input 4 is PD5 (6th bit), left motor input 1 is PD3 (4th bit)
 			
-			//turn left input 1 and right input 4
-			PORTD |= B00101000;	//right motor input 3 is PD6 (7th bit), right motor input 4 is PD5 (6th bit), left motor input 1 is PD3 (4th bit)
+			//turn left input 2 and right input 3
+			PORTB |= B00001000;	//left motor input 2 is PB3 (4th bit)
+			PORTD |= B01000000;	//right motor input 3 is PD6 (7th bit), right motor input 4 is PD5 (6th bit), left motor input 1 is PD3 (4th bit)
 			 //PCB version end
+			
 		break;
 		case MOTORBACKWARD:
 			// PORTB &= B11000011;	//original

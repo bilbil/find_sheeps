@@ -82,7 +82,8 @@ void sensor::sensorEnable(bool val)
 
 void sensor::test(int val)
 {
-	motor::motorStart(true,45,45);
+	motor::motorStart(false,40,40);
+	// motor::motorStartRotate(true,40);
 }
 
 void sensor::adjust()
@@ -173,10 +174,10 @@ void sensor::rotate90Right()
 
 void sensor::process()
 {			  
-    // frontLeft = getFrontLeftWhite();
-	// frontRight = getFrontRightWhite();
-	// backLeft = getBackLeftWhite();
-	// backRight = getBackRightWhite();
+    frontLeft = getFrontLeftWhite();
+	frontRight = getFrontRightWhite();
+	backLeft = getBackLeftWhite();
+	backRight = getBackRightWhite();
 	
 	//faster read of digital ports for reflectance sensors
 	// frontLeft = (PIND & (1<<GRIDSENS_FRONT_LEFT)); 
@@ -563,7 +564,7 @@ void sensor::process()
 				// DEBOUNCE--;
 			// }
 			DEBOUNCE_STAY = 0;
-			myMotor.motorStart(false, 38,38);
+			myMotor.motorStart(false, 42,42);
 		}
 	}
 	else if(ACTION == ADJUST)
@@ -593,7 +594,7 @@ void sensor::process()
 				}
 				else
 				{
-					motor::motorStart(true, 38,38);
+					motor::motorStart(true, 42,42);
 				}
 
 			}
@@ -606,7 +607,7 @@ void sensor::process()
 			// {	
 				// temp = SPEED_ADJUST_MAX;
 			// }
-			  myMotor.motorStartRotate(false,39);
+			  myMotor.motorStartRotate(false,43);
 			  // myMotor.motorStartRotateSeparation(false, 50,40);
 			  // myMotor.motorStart(true, 45,0);
 			
@@ -624,7 +625,7 @@ void sensor::process()
 			// {	
 				// temp = SPEED_ADJUST_MAX;
 			// }
-			  myMotor.motorStartRotate(true,39);
+			  myMotor.motorStartRotate(true,43);
 			  // myMotor.motorStartRotateSeparation(true, 40,50);
 			  // myMotor.motorStart(true, 0,45);
 			
@@ -640,7 +641,7 @@ void sensor::process()
 			DEBOUNCE2 = 0;
 			  // ERRORCOUNT = 0;
 			  // ERRORCOUNT2 = 0;
-			myMotor.motorStart(true, 38,38);
+			myMotor.motorStart(true, 42,42);
 		}
 	}
 	else
