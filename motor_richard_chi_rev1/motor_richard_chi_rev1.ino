@@ -956,14 +956,11 @@ if(beacon.getLeftBeacon()==1)
 }
 
 void rescue() {
-  startMotor(true,forwardSpeed,forwardSpeed);
-  while (1) {
-    if (!digitalRead(A4)) {
-      //kill Motors
-      stopMotor();
-      Serial.println("detected");
-      break;
-    }
+  boolean rescued = false;
+  while (!rescued) {
+    startMotor(true,forwardSpeed,forwardSpeed);
+    stopMotor();
+    rescued = retrieve();
   }
   //move back
   startMotor(false,backwardSpeed,backwardSpeed);
@@ -971,7 +968,20 @@ void rescue() {
   {}
   while(!(getBackLeftWhite() == true || getBackRightWhite() == true))
   {}
-  motorStop();
+  stopMotor();
   
   return;
+}
+
+boolean retrieve () {
+  int counter = 0;
+  while (counter < 100)
+  {
+    if(digitalRead(A4))
+    {
+      return true;
+    }
+    counter++;
+  }
+  return false;
 }
