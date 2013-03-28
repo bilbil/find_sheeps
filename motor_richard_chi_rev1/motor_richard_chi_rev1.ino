@@ -1,3 +1,4 @@
+#include <beacon.h>
 #define GRIDSENS_BACK_RIGHT  7
 #define GRIDSENS_BACK_LEFT   6
 #define GRIDSENS_FRONT_RIGHT 5
@@ -40,6 +41,7 @@ int distance_right = 0;
 int distance_back = 0;
 int state = 0;
 
+Beacon beacon;
 void setup()
 {
   pinMode(10,OUTPUT); //Motor 1 forward
@@ -811,4 +813,157 @@ int getRightGrid()
 		grid = 10;
 	return grid;
 }
+void beacon2rescue ()
+{
+if(beacon.getLeftBeacon()==2)
+  {
+    //Turn left
+    state = 1;
+    while(state!=0)
+    {
+      state = turnLeft(state);
+    }
+    
+    state = 1;
+    while(state!=0)
+    {
+      state = moveCenter(state);
+    }
+  }
+  else if(beacon.getRightBeacon()==2)
+  {
+    //Turn right
+    state = 1;
+    while(state!=0)
+    {
+      state = turnRight(state);
+    }
+    
+    state = 1;
+    while(state!=0)
+    {
+      state = moveCenter(state);
+    }
+  }
+  else if(beacon.getBackBeacon()==2)
+  {
+    //Turn 180
+    state = 1;
+    while(state!=0)
+    {
+      state = turnRight(state);
+    }
+    
+    state = 1;
+    while(state!=0)
+    {
+      state = moveCenter(state);
+    }
+    
+    state = 1;
+    while(state!=0)
+    {
+      state = turnRight(state);
+    }
 
+    state = 1;
+    while(state!=0)
+    {
+      state = moveCenter(state);
+    }
+  }
+  else if(beacon.getFrontBeacon()==2 && getFrontGrid()==0)
+  {
+    //Stop
+    while(1)
+    {
+	//TODO: rescue routine, then return
+      int i = 0;
+    }
+  }
+  else
+  {
+    state = 1;
+    while(state!=0)
+    {
+      state = goStraight(state);
+    }
+  }
+}
+void beacon1rescue ()
+{
+if(beacon.getLeftBeacon()==1)
+  {
+    //Turn left
+    state = 1;
+    while(state!=0)
+    {
+      state = turnLeft(state);
+    }
+    
+    state = 1;
+    while(state!=0)
+    {
+      state = moveCenter(state);
+    }
+  }
+  else if(beacon.getRightBeacon()==1)
+  {
+    //Turn right
+    state = 1;
+    while(state!=0)
+    {
+      state = turnRight(state);
+    }
+    
+    state = 1;
+    while(state!=0)
+    {
+      state = moveCenter(state);
+    }
+  }
+  else if(beacon.getBackBeacon()==1)
+  {
+    //Turn 180
+    state = 1;
+    while(state!=0)
+    {
+      state = turnRight(state);
+    }
+    
+    state = 1;
+    while(state!=0)
+    {
+      state = moveCenter(state);
+    }
+    
+    state = 1;
+    while(state!=0)
+    {
+      state = turnRight(state);
+    }
+
+    state = 1;
+    while(state!=0)
+    {
+      state = moveCenter(state);
+    }
+  }
+  else if(beacon.getFrontBeacon()==1 && getFrontGrid()==0)
+  {
+    //Stop
+    while(1)
+    {
+	//TODO: rescue routine, then return
+      int i = 0;
+    }
+  }
+  else
+  {
+    state = 1;
+    while(state!=0)
+    {
+      state = goStraight(state);
+    }
+  }
+}
