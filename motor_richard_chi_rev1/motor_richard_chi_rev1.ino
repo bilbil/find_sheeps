@@ -1,37 +1,38 @@
 #include <beacon.h>
-#define GRIDSENS_BACK_RIGHT  7
-#define GRIDSENS_BACK_LEFT   6
-#define GRIDSENS_FRONT_RIGHT 5
-#define GRIDSENS_FRONT_LEFT  4
-#define MotorLForward 10
-#define MotorLBackward 12
-#define MotorRForward 11
-#define MotorRBackward 13
-#define frontIR 3
-#define leftIR 8
-#define backIR 9
-#define rightIR 2
+
+#define GRIDSENS_BACK_RIGHT  9
+#define GRIDSENS_BACK_LEFT   10
+#define GRIDSENS_FRONT_RIGHT 12
+#define GRIDSENS_FRONT_LEFT  13
+#define MotorLForward 6
+#define MotorLBackward 5
+#define MotorRForward 3
+#define MotorRBackward 11
+#define frontIR 4
+#define leftIR 7
+#define backIR 8
+#define rightIR 3
 #define DISTANCESENS_FRONT	A0
 #define DISTANCESENS_LEFT	A1
 #define DISTANCESENS_RIGHT	A2
 #define DISTANCESENS_BACK	A3
 
-#define forwardSpeed 35
-#define forwardSlowSpeed 5
-#define backwardSpeed 30
-#define backwardSlowSpeed 5
-#define gridSpeed 30
-#define turnSpeed 45
+#define forwardSpeed 40
+#define forwardSlowSpeed 10
+#define backwardSpeed 40
+#define backwardSlowSpeed 10
+#define gridSpeed 40
+#define turnSpeed 50
 #define pivotTurn 0
 #define fowardDelay 200
+float offset = 0.85;
+float turnOffset = 0.85;
 
 
 boolean frontLeft = false;
 boolean frontRight = false;
 boolean backLeft = false;
 boolean backRight = false;
-float offset = 1.25;
-float turnOffset = 1.00;
 int numWhite = 0;
 int counter = 0;
 int grid = 0;
@@ -46,14 +47,14 @@ Beacon beacon;
 
 void setup()
 {
-  pinMode(10,OUTPUT); //Motor 1 forward
-  pinMode(11,OUTPUT); //Motor 2 forward
-  pinMode(12,OUTPUT); //Motor 1 backward
-  pinMode(13,OUTPUT); //Motor 2 backward
-  pinMode(4,INPUT); //Front Left
-  pinMode(5,INPUT); //Front Right
-  pinMode(6,INPUT); //Back Left
-  pinMode(7,INPUT); //Back Right
+  pinMode(MotorLForward,OUTPUT); //Motor 1 forward
+  pinMode(MotorLBackward,OUTPUT); //Motor 2 forward
+  pinMode(MotorRForward,OUTPUT); //Motor 1 backward
+  pinMode(MotorRBackward,OUTPUT); //Motor 2 backward
+  pinMode(GRIDSENS_BACK_LEFT,INPUT); //Front Left
+  pinMode(GRIDSENS_FRONT_RIGHT,INPUT); //Front Right
+  pinMode(GRIDSENS_BACK_LEFT,INPUT); //Back Left
+  pinMode(GRIDSENS_BACK_RIGHT,INPUT); //Back Right
   
   Serial.begin(4800);
   
@@ -257,7 +258,7 @@ int turnLeft(int state)
     //Make sure the robot starts turning a bit
     case 1:
     startTurn(true,turnSpeed);
-    delay(250);
+    delay(200);
     return 2;
     break;
     
@@ -301,7 +302,7 @@ int turnRight(int state)
     //Make sure the robot starts turning a bit
     case 1:
     startTurn(false,turnSpeed);
-    delay(250);
+    delay(200);
     return 2;
     break;
     
@@ -347,7 +348,7 @@ int moveCenter(int state)
     if(backRight == true || backLeft == true)
     {
       stopMotor();
-      delay(200);
+//      delay(100);
       return 2;
       break;
     }
@@ -386,14 +387,15 @@ int moveCenter(int state)
       if(frontLeft == false)
       {
         //adjust to left
-        startMotor(false,backwardSlowSpeed,gridSpeed);
-        while(getFrontRightWhite() || getBackRightWhite())
-        {}
+//        startMotor(false,backwardSlowSpeed,backwardSpeed);
+//        while(getFrontRightWhite() || getBackRightWhite())
+//        {}
         startMotor(false,backwardSpeed,backwardSpeed);
         while(!getBackLeftWhite())
         {}
         startMotor(true,gridSpeed,gridSpeed);
         while(getBackLeftWhite())
+        
         {}
         stopMotor();
         return 4;
@@ -402,9 +404,9 @@ int moveCenter(int state)
       else if(frontRight == false)
       {
         //adjust to right
-        startMotor(false,gridSpeed,backwardSlowSpeed);
-        while(getFrontLeftWhite() || getBackLeftWhite())
-        {}
+//        startMotor(false,backwardSpeed,backwardSlowSpeed);
+//        while(getFrontLeftWhite() || getBackLeftWhite())
+//        {}
         startMotor(false,backwardSpeed,backwardSpeed);
         while(!getBackRightWhite())
         {}
