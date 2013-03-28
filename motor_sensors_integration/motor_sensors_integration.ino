@@ -16,21 +16,17 @@ char incomingByte;
   
 void setup()
 {
-//  myMotor = motor();    // setup motor settings
-  mySensor = sensor();  // setup grid sensor settings
+   mySensor = sensor();  // setup grid sensor settings
    
    // initialize serial communications at 9600 bps:
-   Serial.begin(4800); 
-}
-
-void startdelay()
-{
-  delay(2000);
+//   Serial.begin(4800); 
+   
+//   mySensor.sensorEnable(true);
 }
 
 void loop()
 { 
-
+    
 // //obstacle detection
 //    while(1)
 //    {    
@@ -56,8 +52,25 @@ void loop()
 //    
 //    mySensor.test(0);
 //manual hard code test starts here   
-      
+while(1)
+{
+  mySensor.test(0);
+//mySensor.goStraightTile(1); 
+//delay(1000);
+//mySensor.rotate90Right();
+//delay(1000);
+}
+//mySensor.adjust();
+//mySensor.rotate90Left();
+//mySensor.adjust();
+//mySensor.goStraightTile(1); 
+//mySensor.rotate90Left();
+//mySensor.rotate90Left();
 
+while(1)
+{
+  int g =0;
+}
       
       while(1)
       { 
@@ -67,10 +80,11 @@ void loop()
                   // read the incoming byte:
                   incomingByte = Serial.read();
                   
+                  mySensor.sensorEnable(true);
+                  
                   if(incomingByte == 'w')
                   {
                       mySensor.goStraightTile(1);
-                
                   }
                   else if(incomingByte == 'a')
                   {
@@ -88,6 +102,8 @@ void loop()
                   {
                       mySensor.setSpeedHigh(false);
                   }
+                  
+                  mySensor.sensorEnable(false);
           }      
           
           front = mySensor.getFrontGrid();
@@ -98,7 +114,7 @@ void loop()
           Serial.println(left);
           Serial.println(right);
           
-          delay(500);
+          delay(300);
       }
 //      while(1)
 //      { 
