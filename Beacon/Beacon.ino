@@ -25,12 +25,14 @@ void loop()
   
   delay(100);
   
-  Serial.print("Front Beacon:");
-  Serial.println(frontBeacon);
-  Serial.print("Back Beacon:");
-  Serial.println(backBeacon);
-  Serial.print("Right Beacon:");
-  Serial.println(rightBeacon);
-  Serial.print("Left Beacon:");
-  Serial.println(leftBeacon);
+  if (frontBeacon || backBeacon || leftBeacon || rightBeacon) {
+    Serial.print("Front Beacon:");
+    Serial.println(frontBeacon);
+    Serial.print("Back Beacon:");
+    Serial.println(backBeacon);
+    Serial.print("Right Beacon:");
+    Serial.println(rightBeacon);
+    Serial.print("Left Beacon:");
+    Serial.println(leftBeacon);
+  }
 }
