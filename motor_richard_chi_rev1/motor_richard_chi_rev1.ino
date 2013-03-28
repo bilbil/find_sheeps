@@ -61,125 +61,10 @@ void loop()
 {
   //Wait 1 second
   delay(1000);
-  
-  if(digitalRead(leftIR)==0)
-  {
-    //Turn left
-    state = 1;
-    while(state!=0)
-    {
-      state = turnLeft(state);
-    }
-    
-    state = 1;
-    while(state!=0)
-    {
-      state = moveCenter(state);
-    }
-  }
-  else if(digitalRead(rightIR)==0)
-  {
-    //Turn right
-    state = 1;
-    while(state!=0)
-    {
-      state = turnRight(state);
-    }
-    
-    state = 1;
-    while(state!=0)
-    {
-      state = moveCenter(state);
-    }
-  }
-  else if(digitalRead(backIR)==0)
-  {
-    //Turn 180
-    state = 1;
-    while(state!=0)
-    {
-      state = turnRight(state);
-    }
-    
-    state = 1;
-    while(state!=0)
-    {
-      state = moveCenter(state);
-    }
-    
-    state = 1;
-    while(state!=0)
-    {
-      state = turnRight(state);
-    }
-
-    state = 1;
-    while(state!=0)
-    {
-      state = moveCenter(state);
-    }
-  }
-  else if(digitalRead(frontIR)==0 && getFrontGrid()==0)
-  {
-    //Stop
-    while(1)
-    {
-      int i = 0;
-    }
-  }
-  else
-  {
-    state = 1;
-    while(state!=0)
-    {
-      state = goStraight(state);
-    }
-  }
-//  
-//  state = 1;
-//  while(state!=0)
-//  {
-//    state = turnLeft(state);
-//  }
-//  
-//  state = 1;
-//  while(state!=0)
-//  {
-//    state = goStraight(state);
-//  }
-
-//  Serial.print(digitalRead(2));
-//  Serial.print("  ");
-//  Serial.print(digitalRead(3));
-//  Serial.print("  ");
-//  Serial.print(digitalRead(8));
-//  Serial.print("  ");
-//  Serial.println(digitalRead(9));
-//  delay(200);
-
-//  Serial.print(getFrontGrid());
-//  Serial.print("  ");
-//  Serial.print(getLeftGrid());
-//  Serial.print("  ");
-//  Serial.println(getRightGrid());
-  
-//  state = 1;
-//  while(state!=0)
-//  {
-//    state = turnRight(state);
-//  }
-//
-//  state = 1;
-//  while(state!=0)
-//  {
-//    state = moveCenter(state);
-//  }
-  
-//  //Stop
-//  while(1)
-//  {
-//    int i = 0;
-//  }
+  beacon1rescue();
+  beacon2rescue();
+  goHome();
+  return;
 }
 
 void startMotor(boolean forward, int leftMotor, int rightMotor)
@@ -880,6 +765,7 @@ if(beacon.getLeftBeacon()==2)
     {
 	//TODO: rescue routine, then return
       int i = 0;
+      return;
     }
   }
   else
@@ -892,9 +778,9 @@ if(beacon.getLeftBeacon()==2)
     }
   }
 }
-void beacon1rescue ()
+void goHome ()
 {
-if(beacon.getLeftBeacon()==1)
+if(beacon.getLeftBeacon()==3)
   {
     //Turn left
     state = 1;
@@ -909,7 +795,7 @@ if(beacon.getLeftBeacon()==1)
       state = moveCenter(state);
     }
   }
-  else if(beacon.getRightBeacon()==1)
+  else if(beacon.getRightBeacon()==3)
   {
     //Turn right
     state = 1;
@@ -924,7 +810,7 @@ if(beacon.getLeftBeacon()==1)
       state = moveCenter(state);
     }
   }
-  else if(beacon.getBackBeacon()==1)
+  else if(beacon.getBackBeacon()==3)
   {
     //Turn 180
     state = 1;
@@ -951,13 +837,94 @@ if(beacon.getLeftBeacon()==1)
       state = moveCenter(state);
     }
   }
-  else if(beacon.getFrontBeacon()==1 && getFrontGrid()==0)
+  else if(beacon.getFrontBeacon()==3 && getFrontGrid()==0)
   {
     //Stop
     while(1)
     {
 	//TODO: rescue routine, then return
       int i = 0;
+      return;
+    }
+  }
+  else
+  {
+    state = 1;
+    while(state!=0)
+    {
+      state = goStraight(state);
+      totalDistance++;
+    }
+  }
+}
+
+void beacon1rescue ()
+{
+if(beacon.getLeftBeacon()==3)
+  {
+    //Turn left
+    state = 1;
+    while(state!=0)
+    {
+      state = turnLeft(state);
+    }
+    
+    state = 1;
+    while(state!=0)
+    {
+      state = moveCenter(state);
+    }
+  }
+  else if(beacon.getRightBeacon()==3)
+  {
+    //Turn right
+    state = 1;
+    while(state!=0)
+    {
+      state = turnRight(state);
+    }
+    
+    state = 1;
+    while(state!=0)
+    {
+      state = moveCenter(state);
+    }
+  }
+  else if(beacon.getBackBeacon()==3)
+  {
+    //Turn 180
+    state = 1;
+    while(state!=0)
+    {
+      state = turnRight(state);
+    }
+    
+    state = 1;
+    while(state!=0)
+    {
+      state = moveCenter(state);
+    }
+    
+    state = 1;
+    while(state!=0)
+    {
+      state = turnRight(state);
+    }
+
+    state = 1;
+    while(state!=0)
+    {
+      state = moveCenter(state);
+    }
+  }
+  else if(beacon.getFrontBeacon()==3 && getFrontGrid()==0)
+  {
+    //Stop
+    while(1)
+    {
+	//TODO: rescue routine, then return
+      int i = 0;
+      return;
     }
   }
   else
