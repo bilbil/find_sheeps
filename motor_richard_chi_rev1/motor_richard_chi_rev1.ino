@@ -780,7 +780,7 @@ if(beacon.getLeftBeacon()==2)
 }
 void goHome ()
 {
-if(beacon.getLeftBeacon()==3)
+if(beacon.getLeftBeacon()==2)
   {
     //Turn left
     state = 1;
@@ -795,7 +795,7 @@ if(beacon.getLeftBeacon()==3)
       state = moveCenter(state);
     }
   }
-  else if(beacon.getRightBeacon()==3)
+  else if(beacon.getRightBeacon()==2)
   {
     //Turn right
     state = 1;
@@ -810,7 +810,7 @@ if(beacon.getLeftBeacon()==3)
       state = moveCenter(state);
     }
   }
-  else if(beacon.getBackBeacon()==3)
+  else if(beacon.getBackBeacon()==2)
   {
     //Turn 180
     state = 1;
@@ -837,7 +837,7 @@ if(beacon.getLeftBeacon()==3)
       state = moveCenter(state);
     }
   }
-  else if(beacon.getFrontBeacon()==3 && getFrontGrid()==0)
+  else if(beacon.getFrontBeacon()==2 && getFrontGrid()==0)
   {
     //Stop
     while(1)
@@ -846,6 +846,24 @@ if(beacon.getLeftBeacon()==3)
       int i = 0;
       return;
     }
+  }
+  else if(getFrontGrid() == 0)
+  {
+    for (int i = 0; i < 2; i++)
+	{
+    //Turn right
+    state = 1;
+    while(state!=0)
+    {
+      state = turnRight(state);
+    }
+    
+    state = 1;
+    while(state!=0)
+    {
+      state = moveCenter(state);
+    }
+  }
   }
   else
   {
@@ -860,7 +878,7 @@ if(beacon.getLeftBeacon()==3)
 
 void beacon1rescue ()
 {
-if(beacon.getLeftBeacon()==3)
+if(beacon.getLeftBeacon()==1)
   {
     //Turn left
     state = 1;
@@ -875,7 +893,7 @@ if(beacon.getLeftBeacon()==3)
       state = moveCenter(state);
     }
   }
-  else if(beacon.getRightBeacon()==3)
+  else if(beacon.getRightBeacon()==1)
   {
     //Turn right
     state = 1;
@@ -890,7 +908,7 @@ if(beacon.getLeftBeacon()==3)
       state = moveCenter(state);
     }
   }
-  else if(beacon.getBackBeacon()==3)
+  else if(beacon.getBackBeacon()==1)
   {
     //Turn 180
     state = 1;
@@ -917,12 +935,12 @@ if(beacon.getLeftBeacon()==3)
       state = moveCenter(state);
     }
   }
-  else if(beacon.getFrontBeacon()==3 && getFrontGrid()==0)
+  else if(beacon.getFrontBeacon()==1 && getFrontGrid()==0)
   {
     //Stop
     while(1)
     {
-	//TODO: rescue routine, then return
+	//TODO: rescue routine, move forward, check short pin, move forward, check short pin, uturn then return
       int i = 0;
       return;
     }
