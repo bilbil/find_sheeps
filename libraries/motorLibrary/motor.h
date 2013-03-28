@@ -30,10 +30,15 @@ OCR2B compare interrupt for PWM duty of BIN1, BIN2
 #include <util/atomic.h>
 
 //motor PWM output pins
-#define AIN1PIN 10
+// #define AIN1PIN 10	//original
+// #define AIN2PIN 11
+// #define BIN1PIN 12
+// #define BIN2PIN 13
+
+#define AIN1PIN 3	//PCB version
 #define AIN2PIN 11
-#define BIN1PIN 12
-#define BIN2PIN 13
+#define BIN1PIN 6
+#define BIN2PIN 5
 
 #define MOTORFORWARD 0
 #define MOTORPIVOTLEFT 1
@@ -62,7 +67,8 @@ class motor
 	static volatile int MOTORONDURATION;  //motor PWM on duration
 	
     static void motorStartRotate(boolean left, int modulation);	// public function for rotating robot until motorStop is called
-    // static int motorDirDist(int dir, int dist, int modulation);	//public function for turning robot and move a certain distance
+    static void motorStartRotateSeparation(boolean left,int modulationLeft, int modulationRight);
+	// static int motorDirDist(int dir, int dist, int modulation);	//public function for turning robot and move a certain distance
     // static int motorDistNoBlock(int dist, int modulation);
 	static int motorStart(boolean forward,int modulationLeft, int modulationRight);	//public function for moving indefinitely
     static void motorDutySet(int left, int right);	// function for PWM duty setpoint

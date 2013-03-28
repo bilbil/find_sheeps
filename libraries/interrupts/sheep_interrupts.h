@@ -6,7 +6,7 @@
 #include <motor.h>
 #include <sensor.h>
 
-#define INTERRUPT_SCALER 2
+#define INTERRUPT_SCALER 8
 
 int interrupt_div = INTERRUPT_SCALER;
 	
@@ -25,16 +25,16 @@ ISR(TIMER2_OVF_vect)        	// interrupt service routine Timer 2 for motor cont
 
 	// sensor::updateDistances();
 	
-	// if(interrupt_div <= 0)
-	// {	
+	if(interrupt_div < 1)
+	{	
 		sensor::process();			//call grid sensor functions	
-		motor::overFlowInterrupt();	//call motor functions
-		// interrupt_div = INTERRUPT_SCALER;
-	// }
-	// else
-	// {
-		// interrupt_div--;
-	// }
+		interrupt_div = INTERRUPT_SCALER;
+	}
+	else
+	{
+		interrupt_div--;
+	}
+	motor::overFlowInterrupt();	//call motor functions
 }
 
 
