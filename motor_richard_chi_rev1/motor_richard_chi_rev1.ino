@@ -41,6 +41,7 @@ int distance_right = 0;
 int distance_back = 0;
 int state = 0;
 
+int totalDistance;
 Beacon beacon;
 void setup()
 {
@@ -887,6 +888,7 @@ if(beacon.getLeftBeacon()==2)
     while(state!=0)
     {
       state = goStraight(state);
+      totalDistance++;
     }
   }
 }
@@ -964,6 +966,7 @@ if(beacon.getLeftBeacon()==1)
     while(state!=0)
     {
       state = goStraight(state);
+      totalDistance++;
     }
   }
 }
