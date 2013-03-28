@@ -956,14 +956,22 @@ if(beacon.getLeftBeacon()==1)
 }
 
 void rescue() {
-  //move a little forward
+  startMotor(true,forwardSpeed,forwardSpeed);
   while (1) {
     if (!digitalRead(A4)) {
-      //kill the motors
+      //kill Motors
+      stopMotor();
       Serial.println("detected");
       break;
     }
   }
   //move back
+  startMotor(false,backwardSpeed,backwardSpeed);
+  while(!(getBackLeftWhite()==false && getBackRightWhite()==false))
+  {}
+  while(!(getBackLeftWhite() == true || getBackRightWhite() == true))
+  {}
+  motorStop();
+  
   return;
 }
