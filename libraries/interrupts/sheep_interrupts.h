@@ -6,7 +6,7 @@
 #include <motor.h>
 #include <sensor.h>
 
-#define INTERRUPT_SCALER 8
+#define INTERRUPT_SCALER 9
 
 int interrupt_div = INTERRUPT_SCALER;
 	
