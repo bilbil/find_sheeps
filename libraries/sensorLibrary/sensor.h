@@ -5,11 +5,19 @@
 
 #include <motor.h>
 
-#define GRIDSENS_BACK_RIGHT  7
-#define GRIDSENS_BACK_LEFT   6
+// #define GRIDSENS_BACK_RIGHT  7	//original
+// #define GRIDSENS_BACK_LEFT   6
 
-#define GRIDSENS_FRONT_RIGHT 5
-#define GRIDSENS_FRONT_LEFT  4
+// #define GRIDSENS_FRONT_RIGHT 5
+// #define GRIDSENS_FRONT_LEFT  4
+
+//pcb version start
+#define GRIDSENS_BACK_RIGHT  1	//PB1
+#define GRIDSENS_BACK_LEFT   2	//PB2
+
+#define GRIDSENS_FRONT_RIGHT 4	//PB4
+#define GRIDSENS_FRONT_LEFT  5	//PB5
+//pcb version end
 
 #define TURNLEFT 0
 #define TURNRIGHT 1
@@ -23,17 +31,26 @@
 #define DISTANCESENS_RIGHT	A2
 #define DISTANCESENS_BACK	A3
 
-#define SPEED_HIGH_STRAIGHT 50
-#define SPEED_HIGH_TURN	 55
-#define SPEED_LOW_STRAIGHT 40
-#define SPEED_LOW_TURN 35	
-#define SPEED_SLOW_STOP	 40
+#define SPEED_HIGH_STRAIGHT 38
+#define SPEED_HIGH_TURN	 42
+#define SPEED_LOW_STRAIGHT 45
+#define SPEED_LOW_TURN 45	
+#define SPEED_SLOW_STOP	 28
 
-#define SPEED_LINE_FOLLOW 45
+#define SPEED_LINE_FOLLOW 30
+
+#define SPEED_ADJUST_MIN 25
+#define SPEED_ADJUST_MAX 35
+
+#define SPEED_ADJUST_LAST_L 2
+#define SPEED_ADJUST_LAST_R 1
+#define SPEED_ADJUST_LAST_M 0
 
 #define TURN_BACK_ON_WHITE 2
 #define TURN_FRONT_ON_WHITE 1
 #define TURN_NOT_INIT 0
+
+#define DEBOUNCE_STAY_COUNT 50
 
 class sensor
 { 
@@ -51,9 +68,14 @@ class sensor
 	
 	static int DEBOUNCE;
 	static int DEBOUNCE2;
+	static int DEBOUNCE_STAY;
+	
 	volatile static int ACTION;				//state of the robot
 	volatile static int GOGRIDCOUNT; 		//user specified tile count
 	volatile static int ERRORCOUNT;
+	volatile static int ERRORCOUNT2;
+	
+	volatile static int ADJUST_LAST_STATE;
 	
 	static int SPEED_STRAIGHT;
 	static int SPEED_TURN;
